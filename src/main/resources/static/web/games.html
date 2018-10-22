@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+<head> 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Games</title>
+ 
+
+</head>
+<body>
+
+<div id="vue">
+<h1>Salvo!</h1>
+           
+<div>
+<ol class="">
+    <li class="games" v-for="game in games">{{ game.id}}, {{ game.name }}, {{game.creationdate}}, {{game.gameplayer[0].player.username}}, {{game.gameplayer[1].player.username}}
+    </li>
+        
+</ol>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+<script src="scripts/games.js"></script>
+
+</body>
+</html>
