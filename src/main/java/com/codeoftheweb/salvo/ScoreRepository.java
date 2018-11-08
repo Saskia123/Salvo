@@ -1,12 +1,11 @@
 package com.codeoftheweb.salvo;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-    @RepositoryRestResource
-    public interface PlayerRepository extends JpaRepository<Player, Long> {
+import java.util.List;
 
-        Player findByuserName(String userName);
-    }
-
+@RepositoryRestResource
+public interface ScoreRepository extends JpaRepository<Score, Long> {
+    List<Score> findById(Long scoreID);
+}

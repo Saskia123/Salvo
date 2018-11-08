@@ -1,20 +1,61 @@
 <!DOCTYPE HTML>
-<html>
-<head> <title>Game</title> </head>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Game</title>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Homemade+Apple|Kristi|La+Belle+Aurore|Meddon|Montez|Nothing+You+Could+Do" rel="stylesheet">
+</head>
+
+
 <body>
-<h1>Ship Locations!</h1>
+    <div id="vue">
+
+        <h1>Ship Locations!</h1>
+
+        <table id="shipGrid" class="grid">
+            <caption class="games" v-if="games.gamePlayers[0] != null">{{games.gamePlayers[0].player.email}} (You)
+            </caption>
+            <tbody>
+                <tr>
+                    <th></th>
+                    <th v-for="number in numbers">{{number}}</th>
+                </tr>
+                <tr v-for="letter in alphabet">
+                    <th>{{letter}}</th>
+                    <td v-for="number in numbers" v-on:click="coordinates(number,letter)" v-bind:id="'U'+letter+number"></td>
+                </tr>
+            </tbody>
+        </table>
 
 
-<script src="https://code.jquery.com/jquery-2.2.0.js"></script>
-<script src="game.js"></script>
+        <table id="salvoGrid" class="grid">
+            <caption class="games" v-if="games.gamePlayers[1] != null">{{games.gamePlayers[1].player.email}} (Enemy)
+            </caption>
+            <tbody>
+                <tr>
+                    <th v-for="number in numbers">{{number}}</th>
+                </tr>
+                <tr v-for="letter in alphabet">
+                    <th>{{letter}}</th>
+                    <td v-for="number in numbers" v-on:click="coordinates(number,letter)" v-bind:id="'E'+letter+number"></td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script src="scripts/game.js"></script>
 
 </body>
+
 </html>
-
-
-
-
-<!--
-for testing:
-http://localhost:8080/web/game.html?gp=1
--->

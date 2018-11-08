@@ -1,28 +1,71 @@
 <!DOCTYPE HTML>
 <html>
-<head> 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Games</title>
- 
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Game</title>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Homemade+Apple|Kristi|La+Belle+Aurore|Meddon|Montez|Nothing+You+Could+Do" rel="stylesheet">
+    <title>Games</title>
 </head>
+
 <body>
 
-<div id="vue">
-<h1>Salvo!</h1>
-           
-<div>
-<ol class="">
-    <li class="games" v-for="game in games">{{ game.id}}, {{ game.name }}, {{game.creationdate}}, {{game.gameplayer[0].player.username}}, {{game.gameplayer[1].player.username}}
-    </li>
-        
-</ol>
-</div>
-</div>
-<script src="https://code.jquery.com/jquery-2.2.0.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
-<script src="scripts/games.js"></script>
+    <div id="vue">
+        <h1>Salvo!</h1>
+
+
+        <div v-if="loading">
+            <div id="login-form" v-if="!checkLogin">
+                <label>Name: <input type="text" name="userName"v-model="userName"></label>
+                <label>Password: <input type="text" name="password" v-model="password"></label>
+            <button v-on:click="login()" v-if="!checkLogin">Log in</button>
+                <button v-on:click="createNewPlayer()"   v-if="!checkLogin">Sign up</button>
+            </div>
+            <div id="logout-form" onsubmit="return false">
+                <button v-on:click="logout()"  v-if="checkLogin">Log out</button>
+            </div>
+
+            <ol class="">
+                <li class="games" v-for="game in games">{{game.id}}, {{ game.name }}, {{game.creationdate}},
+                    <div v-if="game.gameplayer[0]">{{game.gameplayer[0].player.username}},
+                    {{game.gameplayer[0].player.id}}</div>
+                    <div v-if="game.gameplayer[1]">{{game.gameplayer[1].player.username}}, {{game.gameplayer[1].player.id}}
+                    </div>
+                </li>
+        <div v-if="loading">
+            <div id="login-form" v-if="!checkLogin">
+                <label>Name: <input type="text" name="userName"v-model="userName"></label>
+                <label>Password: <input type="text" name="password" v-model="password"></label>
+            <button v-on:click="login()" v-if="!checkLogin">Log in</button>
+                <button v-on:click="createNewPlayer()"   v-if="!checkLogin">Sign up</button>
+            </div>
+            <div id="logout-form" onsubmit="return false">
+                <button v-on:click="logout()"  v-if="checkLogin">Log out</button>
+            </div>
+               
+                <table id="leaderboard" class="grid">
+                    <tbody>
+                        <tr>
+                            <th v-for="x in thx">{{x}}</th>
+                        </tr>
+                        <tr v-for="dat in data">
+                            <td>{{dat.user}}</td>
+                            <td>{{dat.total}}</td>
+                            <td>{{dat.win}}</td>
+                            <td>{{dat.lose}}</td>
+                            <td>{{dat.tie}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ol>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script src="scripts/games.js"></script>
 
 </body>
+
 </html>

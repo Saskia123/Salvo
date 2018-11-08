@@ -1,0 +1,65 @@
+body {
+/*    text-align: center;*/
+/*
+    background-image: url("sky.jpg");
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom right;
+*/
+    font-family: 'Nothing+You+Could+Do', cursive;
+/*    font-family: 'Montez';*/
+/*    font-family: 'Meddon', cursive;*/
+/*    font-family: 'La+Belle+Aurore', cursive;*/
+/*    font-family: 'Kristi', cursive;*/
+/*    font-family: 'Homemade+Apple', cursive;*/
+}
+
+table{
+      border-collapse: collapse;
+    text-align: center;
+}
+
+ol {
+  list-style-type: none;
+}
+
+#leaderboard{
+/*       border-style: solid dotted;*/
+/*    https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dashed*/
+}
+td {
+    width: 50px;
+    height: 50px;
+    border: 5px dotted black
+}
+
+.ship-location{
+    background-color: green;
+}
+.hit {
+     background-color: red; 
+}
+.miss {
+      background-color: blue;
+}
+
+#container {
+	position: relative;
+	top: 30px;
+	outline:2px solid #000;
+	font-size: 0;
+	margin:auto;
+	height:960px;
+	width:960px;
+	padding: 0;
+	border: none;
+}
+
+.grid {
+    margin: 15px;
+    padding: 15px;
+    border:none;
+/*	outline:1px solid #000;*/
+	display:inline-block;
+}
