@@ -3,8 +3,8 @@ package com.codeoftheweb.salvo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -49,6 +49,8 @@ public class SalvoController {
         else{
             Player player=playerRepository.findByuserName(authentication.getName());
             playerDto.put("player",player.getUserName());
+            playerDto.put("playerid",player.getId());
+
         }
 
         playerDto.put("games",gameRepository.findAll()
@@ -108,11 +110,15 @@ public class SalvoController {
                 .map(salvo -> makeSalvoDTO(salvo))
                 .collect(Collectors.toList())
         );
-        mapGamePlayer.put("enemy_salvoes", getEnemy(gamePlayer).getSalvoes()
-                .stream()
-                .map(salvo -> makeSalvoDTO(salvo))
-                .collect(Collectors.toList())
-        );
+        Game game=gamePlayer.getGame();
+        Set<GamePlayer> players=game.getGamePlayers();
+        if (players.size()==2){
+            mapGamePlayer.put("enemy_salvoes", getEnemy(gamePlayer).getSalvoes()
+                    .stream()
+                    .map(salvo -> makeSalvoDTO(salvo))
+                    .collect(Collectors.toList())
+            );
+        }
 
 
         return mapGamePlayer;
@@ -234,6 +240,37 @@ public class SalvoController {
         map.put(key, value);
         return map;
     }
+
+    private Player currentAuthenticatedUser(Authentication authentication) {
+        if (isGuest(authentication)) {
+            return null;
+        }
+        return playerRepository.findByuserName(authentication.getName());
+    }
+
+
+    private boolean isGuest(Authentication authentication) {
+        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
+    }
+
+    @RequestMapping(path = "/game", method = RequestMethod.POST)
+    public ResponseEntity<Object> createGame(Authentication authentication) {
+        final Map<String, Object> response = new HashMap<>();
+        if (isGuest(authentication)) {
+            response.put("error", "please log in");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        } else {
+            final Player player = currentAuthenticatedUser(authentication);
+            final Game newGame = new Game();
+            gameRepository.save(newGame);
+            final GamePlayer firstGamePlayer = new GamePlayer(newGame,player);
+            gamePlayerRepository.save(firstGamePlayer);
+            response.put("gpid", firstGamePlayer.getId());
+//            dbCache.apiGamesResponseChanged = true;
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        }
+    }
+
 }
 
 

@@ -25,6 +25,7 @@ var app = new Vue({
     },
     methods: {
         getData: function () {
+            console.log(urlParams.get('gp'))
             fetch("/api/game_view/" + urlParams.get('gp'), {
                     method: "GET",
                     credentials: "include",
@@ -49,7 +50,8 @@ var app = new Vue({
             }
         },
         printSalvos: function (cells, tableId) {
-            for (var i = 0; i < cells.length; i++) {
+            if(cells != undefined){
+                for (var i = 0; i < cells.length; i++) {
                 let turn = cells[i].salvoTurn;
                 for (var j = 0; j < cells[i].locations.length; j++) {
                     let location = cells[i].locations[j];
@@ -63,6 +65,8 @@ var app = new Vue({
                     cell.innerHTML = turn;
                 }
             }
+            }
+            
         }
     }
 })

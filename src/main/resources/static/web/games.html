@@ -24,27 +24,24 @@
                 <button v-on:click="createNewPlayer()"   v-if="!checkLogin">Sign up</button>
             </div>
             <div id="logout-form" onsubmit="return false">
+                <div v-if="checkLogin">Welcome {{player}}!</div> 
                 <button v-on:click="logout()"  v-if="checkLogin">Log out</button>
             </div>
 
             <ol class="">
-                <li class="games" v-for="game in games">{{game.id}}, {{ game.name }}, {{game.creationdate}},
+
+                    <li class="games" v-for="(game, index) in games">{{game.id}}, {{game.name}}, {{game.creationdate}} 
                     <div v-if="game.gameplayer[0]">{{game.gameplayer[0].player.username}},
-                    {{game.gameplayer[0].player.id}}</div>
-                    <div v-if="game.gameplayer[1]">{{game.gameplayer[1].player.username}}, {{game.gameplayer[1].player.id}}
+                    {{game.gameplayer[0].id}} </div>
+                    <div v-if="game.gameplayer.length == 2">{{game.gameplayer[1].player.username}}, {{game.gameplayer[1].id}}
                     </div>
-                </li>
-        <div v-if="loading">
-            <div id="login-form" v-if="!checkLogin">
-                <label>Name: <input type="text" name="userName"v-model="userName"></label>
-                <label>Password: <input type="text" name="password" v-model="password"></label>
-            <button v-on:click="login()" v-if="!checkLogin">Log in</button>
-                <button v-on:click="createNewPlayer()"   v-if="!checkLogin">Sign up</button>
-            </div>
-            <div id="logout-form" onsubmit="return false">
-                <button v-on:click="logout()"  v-if="checkLogin">Log out</button>
-            </div>
-               
+        <button v-on:click="return2Game(playerid)" v-if="returnGame(playerid,index)">Return to game</button>
+                    <button>Join game</button>
+                    </li>
+                       
+    <button v-on:click="createGame()">Create game</button>
+    
+                       
                 <table id="leaderboard" class="grid">
                     <tbody>
                         <tr>
