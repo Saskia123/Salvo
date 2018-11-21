@@ -266,11 +266,96 @@ public class SalvoController {
             final GamePlayer firstGamePlayer = new GamePlayer(newGame,player);
             gamePlayerRepository.save(firstGamePlayer);
             response.put("gpid", firstGamePlayer.getId());
-//            dbCache.apiGamesResponseChanged = true;
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         }
     }
 
+
+    @RequestMapping(path = "/game/{gameId}/players", method = RequestMethod.POST)
+    private ResponseEntity<Map<String,Object>> joinGame (@PathVariable Long gameId, Authentication authentication) {
+        Game game = gameRepository.findOne(gameId);
+        Player player = playerRepository.findByuserName(authentication.getName());
+        GamePlayer gamePlayer = new GamePlayer(game, player);
+        if (authentication != null){
+            if(game.getGamePlayers().size() == 1) {
+                gamePlayerRepository.save(gamePlayer);
+                return new ResponseEntity<>(makeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>(makeMap("error", "game is full"), HttpStatus.FORBIDDEN);
+            }
+
+        }else{
+            return new ResponseEntity<>(makeMap("error", "not logged"), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(path = "/games/players/{gamePlayerId}/ships")
+    public ResponseEntity<Map<String, Object>> placeShips(@PathVariable ("gamePlayerId") Long gamePlayerId,
+                                                          @RequestParam String type,
+                                                          @RequestParam String[] locations,
+                                                          Authentication authentication) {
+        System.out.println(type);
+
+
+        GamePlayer gamePlayer = gamePlayerRepository.findOne(gamePlayerId);
+        if (authentication == null) {
+            return new ResponseEntity<>(makeMap("error", "log in to place ships"), HttpStatus.UNAUTHORIZED);
+        } else if (gamePlayer == null) {
+            return new ResponseEntity<>(makeMap("error", "gamePlayer does not exist"), HttpStatus.UNAUTHORIZED);
+        } else if (gamePlayer.getPlayer() != currentAuthenticatedUser(authentication)) {
+            return new ResponseEntity<>(makeMap("error", "Not your game"), HttpStatus.UNAUTHORIZED);
+        }  else if (gamePlayer.getShips().size() > 5) {
+            return new ResponseEntity<>(makeMap("error", "Not allowed to place ships ")
+                    , HttpStatus.FORBIDDEN);
+        } else {
+            ArrayList<String> shipList = new ArrayList<>();
+
+            for (int i = 0; i < locations.length; i++) {
+                shipList.add(locations[i]);
+            }
+
+            shipRepository.save(new Ship(type, gamePlayerRepository.findOne(gamePlayerId), shipList));
+            return new ResponseEntity<>(makeMap("status", "Ships placed")
+                    , HttpStatus.CREATED);
+        }
+    }
+
+//    @RequestMapping(path = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)
+//    public ResponseEntity<Map<String, Object>> placeShips(@PathVariable Long gamePlayerId,
+//                                                          @RequestBody Set<Ship> ships,
+//                                                          Authentication authentication) {
+//        GamePlayer gamePlayer = gamePlayerRepository.findOne(gamePlayerId);
+//        if (authentication == null) {
+//            return new ResponseEntity<>(makeMap("error", "log in to place ships"), HttpStatus.UNAUTHORIZED);
+//        } else if (gamePlayer == null) {
+//            return new ResponseEntity<>(makeMap("error", "gamePlayer does not exist"), HttpStatus.UNAUTHORIZED);
+//        } else if (gamePlayer.getPlayer() != currentAuthenticatedUser(authentication)) {
+//            return new ResponseEntity<>(makeMap("error", "Not your game"), HttpStatus.UNAUTHORIZED);
+//        }  else if (gamePlayer.getShips().size() > 5) {
+//            return new ResponseEntity<>(makeMap("error", "Not allowed to place ships ")
+//                    , HttpStatus.FORBIDDEN);
+//        } else {
+//            ArrayList<Map<String,Object>> shipList =new ArrayList<>();
+//            for (Ship ship : ships) {
+//                ship.setGamePlayer(gamePlayer);
+//                shipRepository.save(ship);
+//                shipList.add(makeShipDTO(ship));
+//            }
+//            return new ResponseEntity<>(makeMap("succes", shipList)
+//                    , HttpStatus.CREATED);
+//        }
+//    }
 }
 
 
+//    Implement a back-end controller method that can receive a list of ship objects, with locations, save them in your ship repository, and return a "created" response if there are no problems.
+//
+//        The URL should be /games/players/{gamePlayerId}/ships.
+//        The body of the request should be parsed into a list of ships
+//        An Unauthorized response should be sent if
+//        there is no current user logged in, or
+//        there is no game player with the given ID, or
+//        the current user is not the game player the ID references
+//        A Forbidden response should be sent if the user already has ships placed.
+//        Otherwise, the ships should be added to the game player and saved, and a Created response should be sent.
+//        There's no need for new content in the response, because the page needs to request an updated game view, to see possible actions by the opponent.

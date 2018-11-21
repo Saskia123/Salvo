@@ -31,7 +31,7 @@ public class Ship {
     public Ship(){};
 
     public Ship(String type, GamePlayer gamePlayer, ArrayList locations)  {
-        this.type = type;
+        this.x = type;
         this.gamePlayer = gamePlayer;
         this.Locations = locations;
     };

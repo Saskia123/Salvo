@@ -7,36 +7,87 @@
     <title>Game</title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <link href="https://fonts.googleapis.com/css?family=Homemade+Apple|Kristi|La+Belle+Aurore|Meddon|Montez|Nothing+You+Could+Do" rel="stylesheet">
-</head>
+    
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">-->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    
+</head>
 
 <body>
     <div id="vue">
-
+       <button class="btn btn-primary" v-on:click="back()">Leave game</button>
+        <button  type="button" class="btn btn-primary" v-on:click="logout()"><span class="glyphicon glyphicon-log-out"></span> Log out</button>
         <h1>Ship Locations!</h1>
+       
+    <button class="btn btn-primary" v-on:click="sendShipData('Test', ['A1','A2','A3'])">Sendship data</button>
 
-        <table id="shipGrid" class="grid">
-            <caption class="games" v-if="games.gamePlayers[0] != null">{{games.gamePlayers[0].player.email}} (You)
+<!--
+    <table id="Carrier"><tr>
+    <td></td><td></td><td></td><td></td><td></td>
+    </tr></table>
+    <table id="Battleship"><tr>
+    <td></td><td></td><td></td><td></td>    
+    </tr></table>
+    <table id="Submarine"><tr>
+    <td></td><td></td><td></td>    
+    </tr></table>
+    <table id="Destroyer"><tr>
+    <td></td><td></td><td></td>
+    </tr></table>
+    <table id="PatrolBoat"><tr>
+    <td></td><td></td>    
+    </tr></table>
+-->
+
+<!--
+    Carrier 5
+    Battleship 4
+    Submarine 3
+    Destroyer 3
+    Patrol Boat 2        
+-->
+  
+        <div class="drag">
+        Carrier<img class="ships" id="carrier" draggable="true" ondragstart="dragStart(event)" src="styles/ship1.png" alt="" height="50" width="250" onclick="rotateBy90Deg(this)">
+        Battleship<img class="ships" id="battleship" draggable="true" ondragstart="dragStart(event)" src="styles/ship2.png" alt="" height="50" width="200" onclick="rotateBy90Deg(this)">
+        Submarine<img class="ships" id="submarine" draggable="true" ondragstart="dragStart(event)" src="styles/ship1.png" alt="" height="50" width="150" onclick="rotateBy90Deg(this)">
+        Destroyer<img class="ships" id="destroyer" draggable="true" ondragstart="dragStart(event)" src="styles/ship2.png" alt="" height="50" width="150" onclick="rotateBy90Deg(this)">
+        Patrol Boat<img class="ships" id="patrolboat" draggable="true" ondragstart="dragStart(event)" src="styles/ship1.png" alt="" height="50" width="100" onclick="rotateBy90Deg(this)">
+        </div>
+       
+        <table id="shipGrid" class="grid"  ondragover="allowDrop(event)" ondrop="drop(event)">
+            <caption v-for="player in games.gamePlayers" v-if="playerview(player.id)" class="games text-center h3">
+            {{player.player.email}} (You)
             </caption>
             <tbody>
                 <tr>
                     <th></th>
-                    <th v-for="number in numbers">{{number}}</th>
+                    <th v-for="number in numbers" class="text-center">{{number}}</th>
                 </tr>
                 <tr v-for="letter in alphabet">
                     <th>{{letter}}</th>
-                    <td v-for="number in numbers" v-on:click="coordinates(number,letter)" v-bind:id="'U'+letter+number"></td>
+                    <td v-for="number in numbers" v-bind:id="'U'+letter+number"></td>
+<!--             <td v-for="number in numbers" v-on:drop="coordinates(number,letter)" v-bind:id="'U'+letter+number"></td>-->
                 </tr>
             </tbody>
         </table>
-
-
-        <table id="salvoGrid" class="grid">
-            <caption class="games" v-if="games.gamePlayers[1] != null">{{games.gamePlayers[1].player.email}} (Enemy)
+       
+        <table id="salvoGrid" class="grid"   >
+            <caption v-for="player in games.gamePlayers" v-if="games.gamePlayers[1] != null&&!playerview(player.id)" class="games text-center h3">{{player.player.email}} (Enemy)
             </caption>
             <tbody>
                 <tr>
-                    <th v-for="number in numbers">{{number}}</th>
+                    <th></th>
+                    <th v-for="number in numbers" class="text-center">{{number}}</th>
                 </tr>
                 <tr v-for="letter in alphabet">
                     <th>{{letter}}</th>
@@ -44,12 +95,6 @@
                 </tr>
             </tbody>
         </table>
-
-
-
-
-
-
     </div>
 
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>

@@ -7,7 +7,7 @@ body {
     background-size: cover;
     background-position: bottom right;
 */
-    font-family: 'Nothing+You+Could+Do', cursive;
+    font-family: 'Nothing+You+Could+Do', cursive !important;
 /*    font-family: 'Montez';*/
 /*    font-family: 'Meddon', cursive;*/
 /*    font-family: 'La+Belle+Aurore', cursive;*/
@@ -16,22 +16,34 @@ body {
 }
 
 table{
-      border-collapse: collapse;
+    border-collapse: collapse;
     text-align: center;
 }
 
-ol {
-  list-style-type: none;
-}
 
 #leaderboard{
-/*       border-style: solid dotted;*/
+/*    border-style: solid dotted;*/
 /*    https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dashed*/
 }
+
 td {
     width: 50px;
     height: 50px;
     border: 5px dotted black
+}
+
+td, th {
+    padding: 0;
+    position: relative;
+}
+
+.ships {
+    vertical-align: middle;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
+    display: block;
 }
 
 .ship-location{
@@ -44,11 +56,17 @@ td {
       background-color: blue;
 }
 
+/*
+h2.{
+    font-weight: bold;
+}
+*/
+
 #container {
 	position: relative;
 	top: 30px;
 	outline:2px solid #000;
-	font-size: 0;
+	font-size: 0 !important;
 	margin:auto;
 	height:960px;
 	width:960px;

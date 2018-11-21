@@ -4,10 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Game</title>
+    <title>Games</title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <link href="https://fonts.googleapis.com/css?family=Homemade+Apple|Kristi|La+Belle+Aurore|Meddon|Montez|Nothing+You+Could+Do" rel="stylesheet">
-    <title>Games</title>
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+       
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">-->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    
+
 </head>
 
 <body>
@@ -15,34 +28,58 @@
     <div id="vue">
         <h1>Salvo!</h1>
 
-
+<!--testbed-->
+<!--https://s3.amazonaws.com/gbstool/emails/2380/salvo-testbed.pdf?AWSAccessKeyId=AKIAJBIZLMJQ2O6DKIAA&Expires=1542445200&Signature=fLsh7Ff0T561QHt%2BkacBIhhgLG0%3D-->
+       
         <div v-if="loading">
             <div id="login-form" v-if="!checkLogin">
                 <label>Name: <input type="text" name="userName"v-model="userName"></label>
                 <label>Password: <input type="text" name="password" v-model="password"></label>
-            <button v-on:click="login()" v-if="!checkLogin">Log in</button>
-                <button v-on:click="createNewPlayer()"   v-if="!checkLogin">Sign up</button>
+                <button  type="button" class="btn btn-primary" class="btn btn-lg btn-primary" v-on:click="login()" v-if="!checkLogin"><span class="glyphicon glyphicon-log-in"></span> Log in</button>
+                <button class="btn btn-primary" v-on:click="createNewPlayer()" v-if="!checkLogin">Sign up</button>
             </div>
             <div id="logout-form" onsubmit="return false">
-                <div v-if="checkLogin">Welcome {{player}}!</div> 
-                <button v-on:click="logout()"  v-if="checkLogin">Log out</button>
+                <div v-if="checkLogin">Welcome {{player}}!</div>
+                <button  type="button" class="btn btn-primary" v-on:click="logout()" v-if="checkLogin"><span class="glyphicon glyphicon-log-out"></span> Log out</button>
             </div>
+           
+           
 
-            <ol class="">
 
-                    <li class="games" v-for="(game, index) in games">{{game.id}}, {{game.name}}, {{game.creationdate}} 
-                    <div v-if="game.gameplayer[0]">{{game.gameplayer[0].player.username}},
-                    {{game.gameplayer[0].id}} </div>
-                    <div v-if="game.gameplayer.length == 2">{{game.gameplayer[1].player.username}}, {{game.gameplayer[1].id}}
-                    </div>
-        <button v-on:click="return2Game(playerid)" v-if="returnGame(playerid,index)">Return to game</button>
-                    <button>Join game</button>
-                    </li>
-                       
-    <button v-on:click="createGame()">Create game</button>
+
+      <th>Active games</th>  
+        <table >
+            <tr class="table games" v-for="(game, index) in games">
+            <td>{{game.id}} {{game.name}}</td>
+            <td>Creation date: {{game.creationdate}}</td> 
+            <td v-if="game.gameplayer[0]">Player 1: {{game.gameplayer[0].player.username}}({{game.gameplayer[0].id}})</td> 
+            <td>Player 2:<p v-if="game.gameplayer.length == 2"> {{game.gameplayer[1].player.username}}, {{game.gameplayer[1].id}}</p></td> 
+            <td>                    <button class="btn btn-primary" v-on:click="return2Game(game.gameplayer[1].id)" v-if="game.gameplayer[1] && playerid == game.gameplayer[1].player.id">Return to game</button>
+                    <button class="btn btn-primary" v-on:click="return2Game(game.gameplayer[0].id)" v-if="playerid == game.gameplayer[0].player.id">Return to game</button>
+            <button class="btn btn-primary" v-on:click="joinGame(game.id)" v-if="!returnGame(playerid,index) && game.gameplayer.length !== 2">Join game</button></td> 
     
-                       
-                <table id="leaderboard" class="grid">
+            </tr>
+        </table>
+    </div>
+                
+<!--
+                <tr class="table games" v-for="(game, index) in games">
+                    <p>{{game.id}} {{game.name}}</p> 
+                    <p>Creation date: {{game.creationdate}}</p>
+                    <p v-if="game.gameplayer[0]">
+                    Player 1: {{game.gameplayer[0].player.username}}({{game.gameplayer[0].id}}) </p>
+                    <p>Player 2:</p><p v-if="game.gameplayer.length == 2"> {{game.gameplayer[1].player.username}}, {{game.gameplayer[1].id}}
+                    </p>
+                    <button class="btn btn-primary" v-on:click="return2Game(game.gameplayer[1].id)" v-if="game.gameplayer[1] && playerid == game.gameplayer[1].player.id">Return to game</button>
+                    <button class="btn btn-primary" v-on:click="return2Game(game.gameplayer[0].id)" v-if="playerid == game.gameplayer[0].player.id">Return to game</button>
+                    <button class="btn btn-primary" v-on:click="joinGame(game.id)" v-if="!returnGame(playerid,index) && game.gameplayer.length !== 2">Join game</button>
+                </tr>
+-->
+
+
+                <button class="btn btn-primary" v-on:click="createGame()">Create new game</button>
+
+                <table id="leaderboard">
                     <tbody>
                         <tr>
                             <th v-for="x in thx">{{x}}</th>
@@ -56,7 +93,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </ol>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
@@ -66,3 +102,10 @@
 </body>
 
 </html>
+
+<!--styling: loader, table for games-->
+<!--select one of the two horizontal or vertical ships-->
+<!--*click on the ship and it will flip--> 
+<!--steering wheel next to ship on which you can click once-->
+<!--https://www.shutterstock.com/pt/image-vector/blue-tall-ships-sailing-one-sails-226262686?src=rIe7EvCkd5VYoqmiT354yQ-1-39-->
+<!--https://www.shutterstock.com/search?searchterm=battleship&search_source=base_search_form&language=pt&page=1&sort=popular&image_type=vector&measurement=px&safe=true-->
