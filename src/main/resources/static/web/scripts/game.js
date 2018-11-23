@@ -1,15 +1,20 @@
-    const urlParams = new URL(window.location.href).searchParams;
+   const urlParams = new URL(window.location.href).searchParams;
 
     var id;
 
     function allowDrop(ev){
+                // add if for case td already has ship class
+
     ev.preventDefault();
                 }
+
     function dragStart(ev){
     id=ev.target.id;
                 }
 
     function drop(ev){
+        // add if for case td already has ship class
+        
     console.log("ev.target.id"  +ev.target.id); // targetcell
     selectCells(id, ev.target.id);
     console.log ("ev"+ev)    
@@ -17,17 +22,61 @@
     var cells =  document.getElementsByClassName(id)[0]   
     cells
     ev.target.append(document.getElementById(id));
+    
+    document.getElementById(id).style.margin = "0px";
+    }
+        
+        
+//    var x = document.getElementsByClassName("menu-item-has-children")[0];
+//        x.id="menu"
+//    $(cells).attr('id',ev.target.id)
+        
+        
 //      console.log(typeof(cells[0]))  
 //      console.log(cells)  
 //        var sth=document.getElementById(id)
 //        console.log(sth)
 //    cells[0].append(sth);
-                }
+//                }
+
+function shipOverlap(sth){
+//console.log("in shipoverlap functoin")
+//    console.log(sth)
+    //condition cannot be own ship
+//    if (){ //ship in grid
+//      -webkit-filter: invert(90%) hue-rotate(175deg);
+//      filter: invert(90%) hue-rotate(175deg);        
+//        }
+    
+}
+
+function shadowOn(cellid){
+    console.log(cellid)
+}
+
+function shadowOff(){
+    console.log("done")
+}
+
     var delta =90;
     var horizontal=true;
+
     function rotateBy90Deg(ele){
-    ele.style.webkitTransform="rotate("+delta+"deg)";
-        delta+=90;
+        console.log(ele);
+
+    var oldheight = $('#'+ele.id).height();
+    var oldwidth = $('#'+ele.id).width();
+        
+    console.log("oldheight" + oldheight);
+    console.log("oldwidth" + oldwidth);
+            
+    ele.style.height = oldwidth+"px";
+    ele.style.width = oldheight+"px";
+        
+//    ele.style.width = "50px";
+
+//    ele.style.webkitTransform="rotate("+delta+"deg)";
+//        delta+=90;
         horizontal = !horizontal;
         if (horizontal==true){
         console.log("horizontal");
@@ -39,7 +88,7 @@
     }
 
 function selectCells(id, cellid){
-    console.log("in");
+//    console.log("in");
     switch (id){
         case "carrier":       
         console.log(id + " 5");
@@ -70,6 +119,8 @@ function calculateLocations(shipid, cellid, number){
     var cellarray = [cellid]
     var element = document.getElementById(cellid);
 //       console.log("element"+ element)
+       
+       
     element.classList.add(shipid);
        for (i=1; i<number; i++){
         
@@ -218,7 +269,7 @@ var app = new Vue({
                                 'Accept': 'application/json',
                                 'Content-Type': 'application/x-www-form-urlencoded'
                             },
-                            body: "type=" + type + "&Locations=" + locations
+                            body: "type=" + type + "&locations=" + locations
 
                         })
                         .then(response => response.json())

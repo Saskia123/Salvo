@@ -30,41 +30,11 @@
        
     <button class="btn btn-primary" v-on:click="sendShipData('Test', ['A1','A2','A3'])">Sendship data</button>
 
-<!--
-    <table id="Carrier"><tr>
-    <td></td><td></td><td></td><td></td><td></td>
-    </tr></table>
-    <table id="Battleship"><tr>
-    <td></td><td></td><td></td><td></td>    
-    </tr></table>
-    <table id="Submarine"><tr>
-    <td></td><td></td><td></td>    
-    </tr></table>
-    <table id="Destroyer"><tr>
-    <td></td><td></td><td></td>
-    </tr></table>
-    <table id="PatrolBoat"><tr>
-    <td></td><td></td>    
-    </tr></table>
--->
-
-<!--
-    Carrier 5
-    Battleship 4
-    Submarine 3
-    Destroyer 3
-    Patrol Boat 2        
--->
-  
-        <div class="drag">
-        Carrier<img class="ships" id="carrier" draggable="true" ondragstart="dragStart(event)" src="styles/ship1.png" alt="" height="50" width="250" onclick="rotateBy90Deg(this)">
-        Battleship<img class="ships" id="battleship" draggable="true" ondragstart="dragStart(event)" src="styles/ship2.png" alt="" height="50" width="200" onclick="rotateBy90Deg(this)">
-        Submarine<img class="ships" id="submarine" draggable="true" ondragstart="dragStart(event)" src="styles/ship1.png" alt="" height="50" width="150" onclick="rotateBy90Deg(this)">
-        Destroyer<img class="ships" id="destroyer" draggable="true" ondragstart="dragStart(event)" src="styles/ship2.png" alt="" height="50" width="150" onclick="rotateBy90Deg(this)">
-        Patrol Boat<img class="ships" id="patrolboat" draggable="true" ondragstart="dragStart(event)" src="styles/ship1.png" alt="" height="50" width="100" onclick="rotateBy90Deg(this)">
-        </div>
        
-        <table id="shipGrid" class="grid"  ondragover="allowDrop(event)" ondrop="drop(event)">
+<div class="dragndrop">
+
+    <div id="shipgrid" class="tablebackground">
+        <table class="grid"  ondragover="allowDrop(event)" ondrop="drop(event)">
             <caption v-for="player in games.gamePlayers" v-if="playerview(player.id)" class="games text-center h3">
             {{player.player.email}} (You)
             </caption>
@@ -75,13 +45,25 @@
                 </tr>
                 <tr v-for="letter in alphabet">
                     <th>{{letter}}</th>
-                    <td v-for="number in numbers" v-bind:id="'U'+letter+number"></td>
+                    <td v-for="number in numbers" v-bind:id="'U'+letter+number" ondragenter="shadowOn(id)" ondragleave="shadowOff()"></td>
 <!--             <td v-for="number in numbers" v-on:drop="coordinates(number,letter)" v-bind:id="'U'+letter+number"></td>-->
                 </tr>
             </tbody>
         </table>
+    </div>    
        
-        <table id="salvoGrid" class="grid"   >
+               <div class="allships text-center">
+               <p id="title">Place ships</p>
+        <div class="ships" id="carrier" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondrag="shipOverlap(event)">Carrier</div>
+        <div class="ships" id="battleship" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Battleship</div>
+        <div class="ships" id="submarine" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Submarine</div>
+        <div class="ships" id="destroyer" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Destroyer</div>
+        <div class="ships" id="patrolboat" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Patrol Boat</div>
+            </div>
+
+      
+       <div id="salvogrid" class="tablebackground">
+        <table class="grid"   >
             <caption v-for="player in games.gamePlayers" v-if="games.gamePlayers[1] != null&&!playerview(player.id)" class="games text-center h3">{{player.player.email}} (Enemy)
             </caption>
             <tbody>
@@ -95,8 +77,14 @@
                 </tr>
             </tbody>
         </table>
+        </div>
+       </div> 
+       
     </div>
 
+   <!--<a href="https://www.freepik.com/free-photos-vectors/icon">Icon vector created by Macrovector - Freepik.com</a>-->
+<!--https://www.freepik.com/macrovector/49-->
+   
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
     <script src="scripts/game.js"></script>

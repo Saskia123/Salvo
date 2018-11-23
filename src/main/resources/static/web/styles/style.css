@@ -1,12 +1,12 @@
 body {
-/*    text-align: center;*/
 /*
-    background-image: url("sky.jpg");
+    background-image: url("bg2.jpg");
     height: 100vh;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom right;
 */
+
     font-family: 'Nothing+You+Could+Do', cursive !important;
 /*    font-family: 'Montez';*/
 /*    font-family: 'Meddon', cursive;*/
@@ -19,6 +19,7 @@ table{
     border-collapse: collapse;
     text-align: center;
 }
+
 
 
 #leaderboard{
@@ -37,13 +38,90 @@ td, th {
     position: relative;
 }
 
-.ships {
-    vertical-align: middle;
+.dragndrop{
     position: absolute;
+}
+
+.ships, #title {
+/*    vertical-align: middle;*/
+    position: absolute;
+    background-position: center; 
+    background-size: contain;
+    background-repeat: no-repeat;
+/*    display: inline;*/
     top: 0;
+    
+/*
     left: 0;
     border: 0;
-    display: block;
+*/
+}
+
+#title {
+    margin-left: 40%;
+    margin-top: 5%;
+        font-size: 24px;
+}
+
+#carrier{
+    background-image: url("ship2.png");
+    background-position: center; 
+    background-size: cover;
+    height:50px;
+    width:250px;
+    margin-left: 35px;
+    margin-top: 75px;
+    z-index: 10;
+    
+/*
+    -webkit-filter: invert(90%) hue-rotate(175deg);
+      filter: invert(90%) hue-rotate(175deg);
+*/
+}
+
+#battleship{
+    background-image: url(ship2.png);
+    background-position: center; 
+/*    background-size: cover;*/
+    height:50px;
+    width:200px;
+    align-self: auto;
+    margin-left: 35px;
+        margin-top: 175px;
+    z-index: 10;
+} 
+
+#submarine{
+    background-image: url(ship2.png);
+    background-position: center; 
+/*    background-size: cover;*/
+    height:50px;
+    width:150px;
+    margin-left: 35px;
+    margin-top: 275px;
+    z-index: 10;
+}
+
+#destroyer{
+    background-image: url(ship1.png);
+    background-position: center; 
+/*    background-size: cover;*/
+    height:50px;
+    width:150px;
+    margin-left: 35px;
+    margin-top: 375px;
+    z-index: 10;
+}
+
+#patrolboat{
+    background-image: url(ship1.png);
+    background-position: center; 
+/*    background-size: cover;*/
+    height:50px;
+    width:100px;
+    margin-left: 35px;
+    margin-top: 475px;
+    z-index: 10;
 }
 
 .ship-location{
@@ -56,22 +134,35 @@ td, th {
       background-color: blue;
 }
 
+
 /*
-h2.{
-    font-weight: bold;
+.allships{
+    background-color: rgba(153,153,153,0.1);
+display: inline-block;
+    width: 1000px;
+    width: 500px;
+    height:70px;
+    background-color:aqua;
+    border-radius: 50px;
 }
 */
 
-#container {
-	position: relative;
-	top: 30px;
-	outline:2px solid #000;
-	font-size: 0 !important;
-	margin:auto;
-	height:960px;
-	width:960px;
-	padding: 0;
-	border: none;
+caption{
+    margin: 0 !important;
+}
+
+
+.tablebackground, .allships{
+    background-color: rgba(153,153,153,0.1);
+    border-radius: 30px;
+    display:inline-block;
+    height: 600px;
+    margin: 10px;
+}
+
+.allships{
+    position:relative;
+    width: 320px;
 }
 
 .grid {
@@ -79,5 +170,13 @@ h2.{
     padding: 15px;
     border:none;
 /*	outline:1px solid #000;*/
-	display:inline-block;
+}
+
+#shipgrid{
+
+}
+
+#salvogrid{
+    visibility:hidden;
+    display:none;
 }
