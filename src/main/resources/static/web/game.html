@@ -48,22 +48,17 @@
     </tr></table>
 -->
 
-<!--
-    Carrier 5
-    Battleship 4
-    Submarine 3
-    Destroyer 3
-    Patrol Boat 2        
--->
-  
-        <div class="drag">
-        Carrier<img class="ships" id="carrier" draggable="true" ondragstart="dragStart(event)" src="styles/ship1.png" alt="" height="50" width="250" onclick="rotateBy90Deg(this)">
-        Battleship<img class="ships" id="battleship" draggable="true" ondragstart="dragStart(event)" src="styles/ship2.png" alt="" height="50" width="200" onclick="rotateBy90Deg(this)">
-        Submarine<img class="ships" id="submarine" draggable="true" ondragstart="dragStart(event)" src="styles/ship1.png" alt="" height="50" width="150" onclick="rotateBy90Deg(this)">
-        Destroyer<img class="ships" id="destroyer" draggable="true" ondragstart="dragStart(event)" src="styles/ship2.png" alt="" height="50" width="150" onclick="rotateBy90Deg(this)">
-        Patrol Boat<img class="ships" id="patrolboat" draggable="true" ondragstart="dragStart(event)" src="styles/ship1.png" alt="" height="50" width="100" onclick="rotateBy90Deg(this)">
-        </div>
        
+<div class="dragndrop">
+        <div class="allships">
+<!--        <div class="ships" id="carrier" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondrag="shipOverlap(event)">Carrier</div>-->
+        <div class="ships" id="battleship" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Battleship</div>
+        <div class="ships" id="submarine" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Submarine</div>
+        <div class="ships" id="destroyer" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Destroyer</div>
+        <div class="ships" id="patrolboat" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Patrol Boat</div>
+            </div>
+
+    <div class="tablebackground">
         <table id="shipGrid" class="grid"  ondragover="allowDrop(event)" ondrop="drop(event)">
             <caption v-for="player in games.gamePlayers" v-if="playerview(player.id)" class="games text-center h3">
             {{player.player.email}} (You)
@@ -75,12 +70,14 @@
                 </tr>
                 <tr v-for="letter in alphabet">
                     <th>{{letter}}</th>
-                    <td v-for="number in numbers" v-bind:id="'U'+letter+number"></td>
+                    <td v-for="number in numbers" v-bind:id="'U'+letter+number" ondragenter="shadowOn(id)" ondragleave="shadowOff()"></td>
 <!--             <td v-for="number in numbers" v-on:drop="coordinates(number,letter)" v-bind:id="'U'+letter+number"></td>-->
                 </tr>
             </tbody>
         </table>
+    </div>    
        
+       <div class="tablebackground">
         <table id="salvoGrid" class="grid"   >
             <caption v-for="player in games.gamePlayers" v-if="games.gamePlayers[1] != null&&!playerview(player.id)" class="games text-center h3">{{player.player.email}} (Enemy)
             </caption>
@@ -95,8 +92,47 @@
                 </tr>
             </tbody>
         </table>
-    </div>
+        </div>
+       </div> 
+       
+        
+        
+  
+       
+<!--        <table id="shipGrid" class="grid"  ondragover="allowDrop(event)" ondrop="drop(event)">-->
+<!--            <caption v-for="player in games.gamePlayers" v-if="playerview(player.id)" class="games text-center h3">-->
+<!--            {{player.player.email}} (You)-->
+<!--            </caption>-->
+   
 
+   
+   <div class="grid-container" id="grid-container" ondragover="allowDrop(event)" ondrop="drop(event)">
+    <div class="ships" id="carrier" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondrag="shipOverlap(event)">Carrier</div>
+
+<div id="ship1" onmouseover="testGrid()">ship1</div>
+   <div id="ship2">ship2</div>
+   <div id="ship3">ship3</div>
+   <div id="ship4">ship4</div>
+   <div id="ship5">ship5</div>   
+<!--   div ship1 naar ids U2,U3,U4-->
+   
+    <div></div>
+    <div v-for="number in numbers" class="">{{number}}</div>
+         
+<!--    <div v-for="letter in alphabet">{{letter}}</div>-->
+    <div v-for="number in numbers" v-bind:id="'U'+number" ondragenter="shadowOn(id)" ondragleave="shadowOff()"></div>
+<!--             <td v-for="number in numbers" v-on:drop="coordinates(number,letter)" v-bind:id="'U'+letter+number"></td>-->
+
+    </div>    
+        
+        
+         
+           
+    </div>
+<!--<a href="https://www.freepik.com/free-photos-vectors/icon">Icon vector created by Macrovector - Freepik.com</a>-->
+<!--https://www.freepik.com/macrovector/49-->
+
+   
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
     <script src="scripts/game.js"></script>
