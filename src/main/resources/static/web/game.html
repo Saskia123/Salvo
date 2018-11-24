@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html lang="en" >
 
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <title>Game</title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <link href="https://fonts.googleapis.com/css?family=Homemade+Apple|Kristi|La+Belle+Aurore|Meddon|Montez|Nothing+You+Could+Do" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css?family=Special+Elite" rel="stylesheet">
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -22,13 +22,16 @@
     
 </head>
 
-<body>
+<body onload="startTime()">
+   
+   <div id="test"></div>
+   <div id="txt"></div>
     <div id="vue">
        <button class="btn btn-primary" v-on:click="back()">Leave game</button>
         <button  type="button" class="btn btn-primary" v-on:click="logout()"><span class="glyphicon glyphicon-log-out"></span> Log out</button>
         <h1>Ship Locations!</h1>
        
-    <button class="btn btn-primary" v-on:click="sendShipData('Test', ['A1','A2','A3'])">Sendship data</button>
+<!--    <button class="btn btn-primary" v-on:click="sendShipData('Test', ['A1','A2','A3'])">Sendship data</button>-->
 
        
 <div class="dragndrop">
@@ -53,12 +56,17 @@
     </div>    
        
         <div class="allships text-center">
-               <p id="title">Place ships</p>
-        <div class="ships" id="carrier" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondrag="shipOverlap(event)">Carrier</div>
-        <div class="ships" id="battleship" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Battleship</div>
-        <div class="ships" id="submarine" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Submarine</div>
-        <div class="ships" id="destroyer" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Destroyer</div>
-        <div class="ships" id="patrolboat" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()">Patrol Boat</div>
+        <p id="title">Fleet</p>
+        <p id="f1" class="fleet">Carrier</p>
+        <p id="f2" class="fleet">Battleship</p>
+        <p id="f3" class="fleet">Submarine</p>
+        <p id="f4" class="fleet">Destroyer</p>
+        <p id="f5" class="fleet">Patrol Boat</p>
+        <div class="ships" id="carrier" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondrag="shipOverlap(event)"></div>
+        <div class="ships" id="battleship" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()"></div>
+        <div class="ships" id="submarine" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()"></div>
+        <div class="ships" id="destroyer" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()"></div>
+        <div class="ships" id="patrolboat" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)" ondragover="shipOverlap()"></div>
             </div>
 
       
@@ -81,6 +89,9 @@
        </div> 
        
     </div>
+    
+<!--    <a href="https://www.freepik.com/free-vector/weapon-icons_1053335.htm">Background vector created by Ibrandify - Freepik.com</a>-->
+<!--    <a href="https://www.freepik.com/free-vector/weapon-icons_1053335.htm">Designed by Ibrandify</a>-->
 
    <!--<a href="https://www.freepik.com/free-photos-vectors/icon">Icon vector created by Macrovector - Freepik.com</a>-->
 <!--https://www.freepik.com/macrovector/49-->

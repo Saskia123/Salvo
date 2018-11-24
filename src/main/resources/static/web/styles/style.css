@@ -1,5 +1,5 @@
 body {
-    background-image: url("bg2.jpg");
+    background-image: url("bckgrnd.jpg");
     height: 100vh;
     background-repeat: no-repeat;
     background-size: cover;
@@ -18,7 +18,9 @@ table{
     text-align: center;
 }
 
-
+#txt{
+    font-family: 'Special Elite', cursive;
+}
 
 #leaderboard{
 /*    border-style: solid dotted;*/
@@ -40,7 +42,7 @@ td, th {
     position: absolute;
 }
 
-.ships, #title {
+.ships {
 /*    vertical-align: middle;*/
     position: absolute;
     background-position: center; 
@@ -56,29 +58,60 @@ td, th {
 }
 
 #title {
-    margin-left: 40%;
+    margin-left: 35%;
     margin-top: 5%;
-        font-size: 24px;
+    font-size: 24px;
+    position: absolute;
+/*    top: 0;*/
 }
 
+.fleet{
+    position: absolute;
+    margin-left: 35px;
+}
+
+#f1{
+    margin-top: 48px;
+}
+#f2{
+    margin-top: 150px;
+}
+#f3{
+    margin-top: 250px;
+}
+#f4{
+    margin-top: 350px;
+}
+#f5{
+    margin-top: 450px;
+}
+
+/*
+#test{
+     background-image: url(Weaponicons_h.png);   
+    height: 900px;
+    width: 900px;
+    background-size: contain;
+}
+*/
+
 #carrier{
-    background-image: url("ship2.png");
+    background-image: url("carrier_h.png");
     background-position: center; 
     background-size: cover;
     height:50px;
     width:250px;
     margin-left: 35px;
     margin-top: 75px;
-    z-index: 10;
+    z-index: 10;    
+
+      -webkit-filter: invert(40%) grayscale(100%) brightness(70%) sepia(100%) hue-rotate(-50deg) saturate(400%) contrast(2);
     
-/*
-    -webkit-filter: invert(90%) hue-rotate(175deg);
-      filter: invert(90%) hue-rotate(175deg);
-*/
+      filter: invert(40%) grayscale(100%) brightness(70%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(2);
 }
 
 #battleship{
-    background-image: url(ship2.png);
+    background-image: url(battleship_h.png);
     background-position: center; 
 /*    background-size: cover;*/
     height:50px;
@@ -90,9 +123,9 @@ td, th {
 } 
 
 #submarine{
-    background-image: url(ship2.png);
+    background-image: url(submarine_h.png);
     background-position: center; 
-/*    background-size: cover;*/
+/*    background-size: auto;*/
     height:50px;
     width:150px;
     margin-left: 35px;
@@ -101,7 +134,7 @@ td, th {
 }
 
 #destroyer{
-    background-image: url(ship1.png);
+    background-image: url(destroyer_h.png);
     background-position: center; 
 /*    background-size: cover;*/
     height:50px;
@@ -112,7 +145,7 @@ td, th {
 }
 
 #patrolboat{
-    background-image: url(ship1.png);
+    background-image: url(patrolboat_h.png);
     background-position: center; 
 /*    background-size: cover;*/
     height:50px;
@@ -132,35 +165,23 @@ td, th {
       background-color: blue;
 }
 
-
-/*
-.allships{
-    background-color: rgba(153,153,153,0.1);
-display: inline-block;
-    width: 1000px;
-    width: 500px;
-    height:70px;
-    background-color:aqua;
-    border-radius: 50px;
-}
-*/
-
 caption{
     margin: 0 !important;
 }
 
 
 .tablebackground, .allships{
-    background-color: rgba(153,153,153,0.1);
+    background-color: rgba(255,255,255,0.4);
     border-radius: 30px;
     display:inline-block;
     height: 600px;
     margin: 10px;
 }
 
+
 .allships{
     position:relative;
-    width: 320px;
+    width: 300px;
 }
 
 .grid {
