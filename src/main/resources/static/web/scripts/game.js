@@ -1,12 +1,9 @@
-// when a ship is placed and you rotate no overlap must be possible
 // send ship data
 // let fleet overview dissapear
 // shadow
 // warning when there is overlap
 // layout stuff
-//fix shadowarray
 //add warning stuff
-// rotating in panel
 //shadie sticking when ship is not in grid
 //ondrag z-index
 
@@ -14,7 +11,7 @@
 
     var shipid;
     var cellarray;
-    var shadowArray;
+    var shadowArray=[];
     var overlap;
     var carrierArray=[];
     var battleshipArray=[];
@@ -43,47 +40,45 @@
         return i;
     }
 
-    function allowDrop(ev){                
-//    console.log("shadowArray "+shadowArray);
-    var inGrid=true;    
-    for (i=1; i<shadowArray.length; i++){
-    if  ((shadowArray[i].substr(2,2)>10)||(shadowArray[i].substr(1,1)>"J")) {
-        inGrid=false
+    function inGrid(){    
+        for (i=1; i<shadowArray.length; i++){
+        if  ((shadowArray[i].substr(2,2)>10)||(shadowArray[i].substr(1,1)>"J")) {
+            return false
+            }
         }
+        return true
     }
-//    console.log("ingrid "+inGrid)
-    if (inGrid==true){        
+
+    function allowDrop(ev){                
+    console.log("shadowArray "+shadowArray);
+    console.log("inGrid() "+inGrid())
+    if (inGrid()){        
     ev.preventDefault();
-    }
-    inGrid=true;    
+        }
     }
 
     function dragStart(ev){
     shipid=ev.target.id;
-    document.getElementById(shipid).style.zIndex="-1"
+//    document.getElementById(shipid).style.zIndex="-1"
                 }
 
     function dragEnd(ev){
     shipid=ev.target.id;
-    document.getElementById(shipid).style.zIndex="1" 
-    document.getElementById(shipid).style.filter= null;
+//    document.getElementById(shipid).style.zIndex="1" 
+//    document.getElementById(shipid).style.filter= null;
     }
 
     function drop(ev){
     console.log("shadowArray "+shadowArray);
     console.log(ev)
-    console.log("ev.target.id"  +ev.path[1].id); // targetcell
-    var inGrid=true;    
-    for (i=1; i<shadowArray.length; i++){
-    if  ((shadowArray[i].substr(2,2)>10)||(shadowArray[i].substr(1,1)>"J")) {
-        inGrid=false
-        }
-    }
-    if (inGrid==true&&!shipOverlap(shipid)){   
-    console.log("ingrid "+inGrid)
-        console.log("shipOverlap(shipid) "+shipOverlap(shipid))
+    console.log("ev.target.id"  +ev.target.id); // targetcell
+    console.log("path"  +ev.path[1].id); // targetcell
+
+    if (inGrid()&&!shipOverlap(shipid)){   
+    console.log("ingrid() "+inGrid())
+    console.log("shipid "+shipid)        
+    console.log("shipOverlap(shipid) no overlap"+shipOverlap(shipid))
         
-//    selectCells(shipid, ev.target.id);
      switch (shipid){
         case "carrier":
         console.log("shipid "+shipid)
@@ -113,22 +108,16 @@
 //    console.log("shipid!" + shipid); //destroyer
     ev.target.append(document.getElementById(shipid));
     document.getElementById(shipid).style.margin = "0px";
-    document.getElementById(shipid).style.filter= null;
-    var el = document.getElementById(shadowArray[0])    
-    document.getElementById(el.id).style.zIndex= null;
-    
+//    document.getElementById(shipid).style.filter= null;
+//    var el = document.getElementById(shadowArray[0])    
+//    document.getElementById(el.id).style.zIndex= null;
         }
-    inGrid=true;     
     }        
         
-//      console.log(typeof(cells[0]))  
-//      console.log(cells)  
-
 function shipOverlap(shipid){
 //console.log("in shipoverlap functoin")
 //    console.log("ev"+ev.id)
-//    return false;
-console.log ("in shipoverlap " );
+//console.log ("in shipoverlap " );
 console.log ("shipid " +shipid);
 console.log ("shadowArray " +shadowArray);
 console.log ("carrierArray " +carrierArray);
@@ -201,7 +190,6 @@ for (var i = 0; i < arr1.length; i++) {
 }                
 //console.log("found "+found)
 return found;
-//found = false;
 }
 
 function shadowOn(cellid){
@@ -216,94 +204,111 @@ console.log("cellidnu"+cellid);
  console.log("shadowArray[0] is"+shadowArray[0]);
 
 
+// add shadow by appending ship element to shadowarray[0]    
+//
+//var el = document.getElementById(shadowArray[0])
+////el.append(document.getElementById(shipid));
+//var s=$('#'+shipid).clone().attr('id','shadow').appendTo(el) 
+//$("shadow").css("backgroundImage", $('#'+shipid).css("backgroundImage"));
 //    
-//var shadow = document.createElement("div");
-//shadow.setAttribute("id", "shadow");
-//shadow.style.height  =  $('#'+shipid).height();
-//shadow.style.width  = $('#'+shipid).width(); 
-//shadow.style.height  = document.getElementById(shipid).style.height;
-//shadow.style.width  = document.getElementById(shipid).style.width;
-//var el = document.getElementById("UF7")
-//el.append(document.getElementById("shadow"));   
-    
-//document.getElementById('UF7').appendChild(shadow);
+//var shipid = document.getElementById(shipid)
+//
+//var curr_style;
+//console.log(window.getComputedStyle)
+//    
+//if (window.getComputedStyle) {
+//    curr_style = window.getComputedStyle(shipid);
+//console.log(curr_style)    
+//} else if (shipid.currentStyle) {
+//    curr_style = $.extend(true, {}, shipid.currentStyle);
+//} else {
+//    throw "shit browser";
+//}
+//console.log()    
+//document.getElementById(shipid).style.margin = "0px";    
 
-    
-var el = document.getElementById(shadowArray[0])
-el.append(document.getElementById(shipid));
-    
-    
-document.getElementById(shipid).style.margin = "0px";    
-document.getElementById(shipid).style.filter= "invert(50%) grayscale(50%) brightness(75%) contrast(0) opacity(65%)";
-document.getElementById(shipid).style.zIndex="-2"
-    
-    
+console.log(shipid)
+
+//same element    
+//var el = document.getElementById(shadowArray[0])
+//el.append(document.getElementById(shipid));
+//document.getElementById(shipid).style.margin = "0px";    
+//document.getElementById(shipid).style.filter= "invert(50%) grayscale(50%) brightness(75%) contrast(0) opacity(65%)";
+//document.getElementById(shipid).style.zIndex="-1"
 //    
+    
+    
 //var el = document.getElementById(shadowArray[0])
 //var ship = document.getElementById(shipid)
 //var shadow = ship.cloneNode(true); // make a copy of ship and give it id shadow then append it to the first element of the shadowarray 
+//console.log(shadow)
 //shadow.setAttribute("id", "shadow");    
-//el.append(document.getElementById(shadow));
+//el.appendChild(shadow);
 //    
-//console.log("cellid= "+cellid+"shipid= "+shipid+"shadowArray[0]= "+shadowArray[0])   
-//    
-//document.getElementById(shadow).style.margin = "0px";    
-//document.getElementById(shadow).style.filter= "invert(50%) grayscale(50%) brightness(75%) contrast(0) opacity(65%)";
-//document.getElementById(shadow).style.zIndex="-2"
-//    
+
+console.log("cellid= "+cellid+"shipid= "+shipid+"shadowArray[0]= "+shadowArray[0])   
+    
+//document.getElementById("shadow").style.backgroundColor="#00F"    
+//document.getElementById("shadow").style.margin = "0px";    
+
+//document.getElementById("shadow").style.filter= "invert(50%) grayscale(50%) brightness(75%) contrast(0) opacity(65%)";
+//document.getElementById("shadow").style.zIndex="-2"
+    
 }
 
-function shadowOff(){
-//    shadow = document.getElementById(shadow);
-//    el = document.getElementById(shadowArray[0])
-//    el.remove(shadow);
+function shadowOff(id){
+//    console.log ("id==="+id)
+//    shadow = document.getElementById("shadow");
+//    el = document.getElementById(id)
+//    console.log(shadow)
+//    el.removeChild(shadow);
 }
 
 
-function rotateBy90Deg(ele){    
-        console.log(ele);
-
-//when rotating in startpoint cannot do the shadowarray and causes error        
-// need to have the rotated array to see if there is overlap. if there is it should not be rotated
-        //use shadowarray to compare
-//        selectCells(shipid, cellid)
+function rotateBy90Deg(ele){            
+        console.log(ele);    
         shipid = ele.id
-              var  cellid;
+    
+//change boolean var Horizontal and determine shadowArray locations
+    this[shipid+"Horizontal"] = !this[shipid+"Horizontal"];
+    
             switch (shipid){
-        case "carrier":       
-            cellid=carrierArray[0]; 
+        case "carrier":
+            if(carrierArray[0]) {       
+            shadowArray = selectCells(shipid, carrierArray[0]) ;
+            } 
+            console.log("shadowArray "+shadowArray) 
             break;
         case "battleship":
-//            console.log(shipid + " 4");
-            cellid=battleshipArray[0];        
+            if(battleshipArray[0]) {       
+            shadowArray = selectCells(shipid, battleshipArray[0]) ;
+            }                     
             break;
         case "submarine":
-//            console.log(shipid + " 3");
-            cellid=submarineArray[0];        
+            if(submarineArray[0]) {       
+            shadowArray = selectCells(shipid, submarineArray[0]) ;
+            } 
             break;
         case "destroyer":
-            cellid=destroyerArray[0];        
-//            console.log(shipid + " 3");
+             if(destroyerArray[0]) {       
+            shadowArray = selectCells(shipid, destroyerArray[0]) ;
+            }        
             break;
         case "patrolboat":
-            cellid=patrolboatArray[0];        
-//            console.log(shipid + " 2");
+             if(patrolboatArray[0]) {       
+            shadowArray = selectCells(shipid, patrolboatArray[0]) ;
+            }        
         break;
         }
         
+    console.log(this[shipid+"Horizontal"]) 
+    console.log("shadowarrayy "+shadowArray)
 
-        console.log ("cellid here "+cellid);
-     
-    console.log(this[shipid+"Horizontal"])
-
-//        this[shipid+"Horizontal"] = !this[shipid+"Horizontal"];
-    this[shipid+"Horizontal"] = !this[shipid+"Horizontal"];
-         shadowArray = selectCells(shipid, cellid) 
-        console.log("shadowarrayy "+shadowArray)
-
-    if (!shipOverlap(shipid)){   
-        console.log("!shipOverlap() "+!shipOverlap())
-
+    console.log("shipid "+shipid)
+    console.log("!shipOverlap(shipid) "+!shipOverlap(shipid))
+    console.log("inGrid() "+inGrid())
+    
+    if (inGrid()&&!shipOverlap(shipid)){   
     
     var oldheight = $('#'+ele.id).height();
     var oldwidth = $('#'+ele.id).width();
@@ -313,15 +318,15 @@ function rotateBy90Deg(ele){
             
     ele.style.height = oldwidth+"px";
     ele.style.width = oldheight+"px";
-        
-        
-        console.log("shipid "+shipid)
+    
         
 //            console.log(this[shipid+"Horizontal"])
         console.log(this[shipid+"Horizontal"]==true )
+        
+    //apply the right image in accordance to horizontal boolean    
         if (this[shipid+"Horizontal"]==true){
         console.log("should be horizontal"+this[shipid+"Horizontal"]);
-        ele.style.backgroundImage = "url(styles/"+shipid+"_h.png)";                   
+        ele.style.backgroundImage = "url(styles/"+shipid+"_h.png)";      
         }    else{
         console.log("vertical");
 //            var shipid = ele.id
@@ -330,47 +335,39 @@ function rotateBy90Deg(ele){
         path="url("+shipid+"_v.png)"
         ele.style.backgroundImage = "url(styles/"+shipid+"_v.png)";       
             };
-//        'url(styles/carrier_v.png)'
         
         
-      var  cellid;
             switch (shipid){
         case "carrier":       
-            cellid=carrierArray[0]; 
-            carrierArray=selectCells(shipid, cellid);
+            carrierArray=selectCells(shipid, carrierArray[0]);
             console.log("carrierArray"+carrierArray)
             break;
         case "battleship":
 //            console.log(shipid + " 4");
-            cellid=battleshipArray[0];        
-            battleshipArray=selectCells(shipid, cellid);
+            battleshipArray=selectCells(shipid, battleshipArray[0]);
             console.log("battleshipArray"+battleshipArray)
             break;
         case "submarine":
 //            console.log(shipid + " 3");
-            cellid=submarineArray[0];        
-            submarineArray=selectCells(shipid, cellid);
+            submarineArray=selectCells(shipid, submarineArray[0]);
             console.log("submarineArray"+submarineArray)
             break;
         case "destroyer":
-            cellid=destroyerArray[0];        
-            destroyerArray=selectCells(shipid, cellid);
+            destroyerArray=selectCells(shipid, destroyerArray[0]);
 //            console.log(shipid + " 3");
             console.log("destroyerArray"+destroyerArray)
             break;
         case "patrolboat":
-            cellid=patrolboatArray[0];        
-            patrolboatArray=selectCells(shipid, cellid);
+            patrolboatArray=selectCells(shipid, patrolboatArray[0]);
             console.log("patrolboatArray"+patrolboatArray)
 //            console.log(shipid + " 2");
         break;
         }
 }
     else{
+        //undo horizontal boolean in case not in grid or overlap
         this[shipid+"Horizontal"] = !this[shipid+"Horizontal"];
-    }
-        console.log("shipid "+shipid)
-        console.log("cellid "+cellid)   
+        }
     }
 
 
@@ -431,7 +428,6 @@ function calculateLocations(shipid, cellid, number){
         var element = document.getElementById(cellid);
 //       console.log("element"+ element)
 //    element.classList.add(shipid);
-
     for (i=1; i<number; i++){
 //        console.log("first cellid "+cellid)
         var row = cellid.substr(1,1)
@@ -442,7 +438,6 @@ function calculateLocations(shipid, cellid, number){
 //        console.log("second cellid "+cellid)
         element = document.getElementById(cellid);           
 //        element.classList.add(shipid);
-        
         cellarray.push(cellid)
 //        console.log("cellarray " + cellarray)       
     }
@@ -450,7 +445,6 @@ function calculateLocations(shipid, cellid, number){
 //        console.log("cellarray " + cellarray)       
     return cellarray;
 }
-
 
 
 var app = new Vue({

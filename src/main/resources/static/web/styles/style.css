@@ -186,6 +186,17 @@ caption{
     margin: 10px;
 }
 
+#shadow{
+    background-image: url("carrier_h.png");
+    background-position: center; 
+    background-size: cover;
+
+    filter: invert(50%) grayscale(50%) brightness(75%) contrast(0) opacity(65%);
+/*    background-color:aqua;*/
+    z-index: -1;
+    height:50px;
+    width:150px;
+}
 
 .allships{
     position:relative;

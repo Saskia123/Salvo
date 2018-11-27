@@ -49,7 +49,7 @@
                 </tr>
                 <tr v-for="letter in alphabet">
                     <th>{{letter}}</th>
-                    <td v-for="number in numbers" v-bind:id="'U'+letter+number" ondragenter="shadowOn(id)" ondragleave="shadowOff()"></td>
+                    <td v-for="number in numbers" v-bind:id="'U'+letter+number" ondragenter="shadowOn(id)" ondragleave="shadowOff(id)"></td>
 <!--             <td v-for="number in numbers" v-on:drop="coordinates(number,letter)" v-bind:id="'U'+letter+number"></td>-->
                 </tr>
             </tbody>
