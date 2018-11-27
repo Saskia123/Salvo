@@ -23,10 +23,11 @@
 </head>
 
 <body onload="startTime()">
+    <div id="vue">
    
    <div id="test"></div>
    <div id="txt"></div>
-    <div id="vue">
+
        <button class="btn btn-primary" v-on:click="back()">Leave game</button>
         <button  type="button" class="btn btn-primary" v-on:click="logout()"><span class="glyphicon glyphicon-log-out"></span> Log out</button>
         <h1>Ship Locations!</h1>
@@ -62,11 +63,11 @@
         <p id="f3" class="fleet">Submarine</p>
         <p id="f4" class="fleet">Destroyer</p>
         <p id="f5" class="fleet">Patrol Boat</p>
-        <div class="ships" id="carrier" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)"></div>
-        <div class="ships" id="battleship" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)"></div>
-        <div class="ships" id="submarine" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)"></div>
-        <div class="ships" id="destroyer" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)"></div>
-        <div class="ships" id="patrolboat" draggable="true" ondragstart="dragStart(event)" onclick="rotateBy90Deg(this)"></div>
+        <div class="ships" id="carrier" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" onclick="rotateBy90Deg(this)"></div>
+        <div class="ships" id="battleship" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" onclick="rotateBy90Deg(this)"></div>
+        <div class="ships" id="submarine" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" onclick="rotateBy90Deg(this)"></div>
+        <div class="ships" id="destroyer" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" onclick="rotateBy90Deg(this)"></div>
+        <div class="ships" id="patrolboat" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" onclick="rotateBy90Deg(this)"></div>
             </div>
 
       

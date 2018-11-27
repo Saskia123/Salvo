@@ -1,9 +1,13 @@
 body {
+/*
     background-image: url("bckgrnd.jpg");
     height: 100vh;
+    width: 100vh;
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: bottom right;
+    overflow: auto;
+*/
+/*    background-position: bottom right;*/
 
     font-family: 'Nothing+You+Could+Do', cursive !important;
 /*    font-family: 'Montez';*/
@@ -11,6 +15,7 @@ body {
 /*    font-family: 'La+Belle+Aurore', cursive;*/
 /*    font-family: 'Kristi', cursive;*/
 /*    font-family: 'Homemade+Apple', cursive;*/
+    overflow: auto;
 }
 
 table{
@@ -36,6 +41,7 @@ td {
 td, th {
     padding: 0;
     position: relative;
+    z-index: 0;
 }
 
 .dragndrop{
@@ -50,7 +56,8 @@ td, th {
     background-repeat: no-repeat;
 /*    display: inline;*/
     top: 0;
-    
+    z-index: 1;
+  
 /*
     left: 0;
     border: 0;
@@ -103,11 +110,17 @@ td, th {
     width:250px;
     margin-left: 35px;
     margin-top: 75px;
-    z-index: 10;    
 
+/*shadow effect
+    -webkit-filter: invert(40%) grayscale(100%) brightness(70%) sepia(100%) hue-rotate(-50deg) saturate(400%) contrast(2);
+    filter: invert(50%) grayscale(50%) brightness(75%) contrast(0) opacity(65%)
+*/    
+    
+/* make red for warning 
       -webkit-filter: invert(40%) grayscale(100%) brightness(70%) sepia(100%) hue-rotate(-50deg) saturate(400%) contrast(2);
     
       filter: invert(40%) grayscale(100%) brightness(70%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(2);
+*/
 }
 
 #battleship{
@@ -119,7 +132,6 @@ td, th {
     align-self: auto;
     margin-left: 35px;
         margin-top: 175px;
-    z-index: 10;
 } 
 
 #submarine{
@@ -130,7 +142,6 @@ td, th {
     width:150px;
     margin-left: 35px;
     margin-top: 275px;
-    z-index: 10;
 }
 
 #destroyer{
@@ -141,7 +152,6 @@ td, th {
     width:150px;
     margin-left: 35px;
     margin-top: 375px;
-    z-index: 10;
 }
 
 #patrolboat{
@@ -152,7 +162,6 @@ td, th {
     width:100px;
     margin-left: 35px;
     margin-top: 475px;
-    z-index: 10;
 }
 
 .ship-location{
@@ -169,7 +178,6 @@ caption{
     margin: 0 !important;
 }
 
-
 .tablebackground, .allships{
     background-color: rgba(255,255,255,0.4);
     border-radius: 30px;
@@ -182,6 +190,7 @@ caption{
 .allships{
     position:relative;
     width: 300px;
+    z-index: 0;
 }
 
 .grid {
