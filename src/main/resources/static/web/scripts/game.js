@@ -1,12 +1,15 @@
-// send ship data
-// let fleet overview dissapear
-// shadow
-// warning when there is overlap
-// layout stuff
-//add warning stuff
-//shadie sticking when ship is not in grid
-//ondrag z-index
-
+// shadow -> change pointer position on drag
+// warning when there is overlap on drag/drop and when rotating
+// layout stuff -> center dragndrop, top navigation
+// cookie or whatever not to log out
+// sending amount of salvoes equal to ships left
+// when you click on the salvo shot it will undo it 
+// check after delay
+// solution for showing oponents sunk ships (show full ship or overview with colors)
+// show hits of oponents ship
+// if error message ==login, then redirect to homepage
+// sign up stuff
+// it should not be possible to move ships and salvoes after sending ship and salvo data
   const urlParams = new URL(window.location.href).searchParams;
 
     var shipid;
@@ -23,16 +26,23 @@
     var submarineHorizontal=true;
     var destroyerHorizontal=true;
     var patrolboatHorizontal=true;
+    var shipsPlaced = 0;
+    var turn=0;
+    var cells=[];
+    var locationArray=[];
 
     function startTime() {
     var today = new Date();
+    var d = today.getDate();
+    var month = today.getMonth();
+    var y = today.getFullYear();
     var h = today.getHours();
     var m = today.getMinutes();
     var s = today.getSeconds();
     m = checkTime(m);
     s = checkTime(s);
     document.getElementById('txt').innerHTML =
-    h + ":" + m + ":" + s;
+    d+"/"+month+"/"+y+" "+ h + ":" + m + ":" + s;
     var t = setTimeout(startTime, 500);
     }
     function checkTime(i) {
@@ -40,7 +50,10 @@
         return i;
     }
 
-    function inGrid(){    
+    function inGrid(){
+        if (shadowArray==undefined){
+            return true
+        }
         for (i=1; i<shadowArray.length; i++){
         if  ((shadowArray[i].substr(2,2)>10)||(shadowArray[i].substr(1,1)>"J")) {
             return false
@@ -50,8 +63,8 @@
     }
 
     function allowDrop(ev){                
-    console.log("shadowArray "+shadowArray);
-    console.log("inGrid() "+inGrid())
+//    console.log("shadowArray "+shadowArray);
+//    console.log("inGrid() "+inGrid())
     if (inGrid()){        
     ev.preventDefault();
         }
@@ -69,45 +82,89 @@
     }
 
     function drop(ev){
-    console.log("shadowArray "+shadowArray);
+//    console.log("shadowArray "+shadowArray);
     console.log(ev)
-    console.log("ev.target.id"  +ev.target.id); // targetcell
-    console.log("path"  +ev.path[1].id); // targetcell
+//    console.log("ev.target.id"  +ev.target.id); // targetcell
+//    console.log("path"  +ev.path[1].id); // targetcell
 
     if (inGrid()&&!shipOverlap(shipid)){   
-    console.log("ingrid() "+inGrid())
-    console.log("shipid "+shipid)        
-    console.log("shipOverlap(shipid) no overlap"+shipOverlap(shipid))
+//    console.log("ingrid() "+inGrid())
+//    console.log("shipid "+shipid)        
+//    console.log("shipOverlap(shipid) no overlap"+shipOverlap(shipid))
         
      switch (shipid){
         case "carrier":
-        console.log("shipid "+shipid)
-        console.log("ev.target.id"+ev.target.id)
-             //here
+//        console.log("shipid "+shipid)
+//        console.log("ev.target.id"+ev.target.id)
         carrierArray=selectCells(shipid, ev.target.id);
-        console.log("carrierArray"+carrierArray)
+//        console.log("carrierArray"+carrierArray)
             break;
         case "battleship":
         battleshipArray= selectCells(shipid, ev.target.id);
-        console.log("battleship"+battleship)
+//        console.log("battleship"+battleship)
             break;
         case "submarine":
         submarineArray=selectCells(shipid, ev.target.id);
-        console.log("submarineArray"+submarineArray)
+//        console.log("submarineArray"+submarineArray)
             break;
         case "destroyer":
         destroyerArray= selectCells(shipid, ev.target.id);
-        console.log("destroyerArray"+destroyerArray)
+//        console.log("destroyerArray"+destroyerArray)
             break;
         case "patrolboat":
         patrolboatArray= selectCells(shipid, ev.target.id);        
-        console.log("patrolboatArray"+patrolboatArray)
+//        console.log("patrolboatArray"+patrolboatArray)
              break;
         }
 //    console.log ("ev"+ev)    
 //    console.log("shipid!" + shipid); //destroyer
     ev.target.append(document.getElementById(shipid));
     document.getElementById(shipid).style.margin = "0px";
+    shadowArray=[];
+    shipsPlaced=shipsPlaced+1;
+//    console.log ("shipsPlaced "+shipsPlaced)
+        
+    if(carrierArray.length==5&&battleshipArray.length==4&&submarineArray.length==3&&destroyerArray.length==3&&patrolboatArray.length==2){
+    document.getElementById("shipPanel").style.display = "none";
+//    document.getElementById("shipPanel").style.visibility = "hidden";
+    document.getElementById("salvogrid").style.display = "block";
+//    document.getElementById("salvogrid").style.visibility = "visible";
+        
+//        carrierArray[0]=carrierArray[0].replace("U", "");        
+//        console.log("carrierArray[0] "+carrierArray[0]);
+
+        for (var i = 0; i < carrierArray.length; i++) {
+            console.log("i "+i)
+            console.log("carrierArray[i]"+carrierArray[i])
+        carrierArray[i]=carrierArray[i].replace("U", "");    
+            console.log("carrierArray[i]"+carrierArray[i])
+        }
+        for (var i = 0; i < battleshipArray.length; i++) {
+        battleshipArray[i]=battleshipArray[i].replace("U", "");    
+        }
+        for (var i = 0; i < submarineArray.length; i++) {
+        submarineArray[i]=submarineArray[i].replace("U", "");    
+        }
+        for (var i = 0; i < destroyerArray.length; i++) {
+        destroyerArray[i]=destroyerArray[i].replace("U", "");    
+        }
+        for (var i = 0; i < patrolboatArray.length; i++) {
+        patrolboatArray[i]=patrolboatArray[i].replace("U", "");    
+        }
+        
+    setTimeout(function(){    
+        console.log("carrierArray withou "+carrierArray);
+        console.log("battleshipArray withou "+battleshipArray);
+        console.log("submarineArray withou "+submarineArray);
+        console.log("destroyerArray withou "+destroyerArray);
+        console.log("patrolboatArray withou "+patrolboatArray);
+        app.sendShipData('Carrier', carrierArray);
+        app.sendShipData('Battleship', battleshipArray);
+        app.sendShipData('Submarine', submarineArray);
+       app.sendShipData('Destroyer', destroyerArray);
+      app.sendShipData('Patrol Boat', patrolboatArray);
+        }, 3000);
+    }    
 //    document.getElementById(shipid).style.filter= null;
 //    var el = document.getElementById(shadowArray[0])    
 //    document.getElementById(el.id).style.zIndex= null;
@@ -118,10 +175,15 @@ function shipOverlap(shipid){
 //console.log("in shipoverlap functoin")
 //    console.log("ev"+ev.id)
 //console.log ("in shipoverlap " );
-console.log ("shipid " +shipid);
-console.log ("shadowArray " +shadowArray);
-console.log ("carrierArray " +carrierArray);
+//console.log ("shipid " +shipid);
+//console.log ("shadowArray " +shadowArray);
+//console.log ("carrierArray " +carrierArray);
+
     
+if (shadowArray==undefined){
+        return false
+    } else{
+        
      switch (shipid){
         case "carrier":
 if(compareArrays(shadowArray, battleshipArray)||         
@@ -134,8 +196,8 @@ if(compareArrays(shadowArray, battleshipArray)||
 }      
              break;
         case "battleship":
-console.log ("shadowArray " +shadowArray);
-console.log ("carrierArray " +carrierArray);
+//console.log ("shadowArray " +shadowArray);
+//console.log ("carrierArray " +carrierArray);
              
 if(compareArrays(shadowArray, carrierArray)||         
     compareArrays(shadowArray, submarineArray)||        
@@ -177,6 +239,7 @@ if(compareArrays(shadowArray, carrierArray)||
 }        
              break;
         }
+    }
 }
 
 function compareArrays(arr1, arr2){
@@ -193,15 +256,15 @@ return found;
 }
 
 function shadowOn(cellid){
-console.log("shipidnu"+shipid);
-console.log("cellidnu"+cellid);
+//console.log("shipidnu"+shipid);
+//console.log("cellidnu"+cellid);
     
 //    shipid=ev.target.id;
 //    event.target.className
     
  shadowArray = selectCells(shipid, cellid) 
- console.log("shadowArray is"+shadowArray);
- console.log("shadowArray[0] is"+shadowArray[0]);
+// console.log("shadowArray is"+shadowArray);
+// console.log("shadowArray[0] is"+shadowArray[0]);
 
 
 // add shadow by appending ship element to shadowarray[0]    
@@ -227,7 +290,7 @@ console.log("cellidnu"+cellid);
 //console.log()    
 //document.getElementById(shipid).style.margin = "0px";    
 
-console.log(shipid)
+//console.log(shipid)
 
 //same element    
 //var el = document.getElementById(shadowArray[0])
@@ -235,7 +298,7 @@ console.log(shipid)
 //document.getElementById(shipid).style.margin = "0px";    
 //document.getElementById(shipid).style.filter= "invert(50%) grayscale(50%) brightness(75%) contrast(0) opacity(65%)";
 //document.getElementById(shipid).style.zIndex="-1"
-//    
+    
     
     
 //var el = document.getElementById(shadowArray[0])
@@ -244,9 +307,9 @@ console.log(shipid)
 //console.log(shadow)
 //shadow.setAttribute("id", "shadow");    
 //el.appendChild(shadow);
-//    
+    
 
-console.log("cellid= "+cellid+"shipid= "+shipid+"shadowArray[0]= "+shadowArray[0])   
+//console.log("cellid= "+cellid+"shipid= "+shipid+"shadowArray[0]= "+shadowArray[0])   
     
 //document.getElementById("shadow").style.backgroundColor="#00F"    
 //document.getElementById("shadow").style.margin = "0px";    
@@ -261,7 +324,8 @@ function shadowOff(id){
 //    shadow = document.getElementById("shadow");
 //    el = document.getElementById(id)
 //    console.log(shadow)
-//    el.removeChild(shadow);
+////    el.removeChild(shadow);
+//    el.removeChild(document.getElementById("shadow"));
 }
 
 
@@ -271,7 +335,6 @@ function rotateBy90Deg(ele){
     
 //change boolean var Horizontal and determine shadowArray locations
     this[shipid+"Horizontal"] = !this[shipid+"Horizontal"];
-    
             switch (shipid){
         case "carrier":
             if(carrierArray[0]) {       
@@ -308,6 +371,10 @@ function rotateBy90Deg(ele){
     console.log("!shipOverlap(shipid) "+!shipOverlap(shipid))
     console.log("inGrid() "+inGrid())
     
+//    if (inGrid()==undefined){
+//    inGrid()==    
+//    }
+    
     if (inGrid()&&!shipOverlap(shipid)){   
     
     var oldheight = $('#'+ele.id).height();
@@ -336,40 +403,40 @@ function rotateBy90Deg(ele){
         ele.style.backgroundImage = "url(styles/"+shipid+"_v.png)";       
             };
         
-        
             switch (shipid){
         case "carrier":       
-            carrierArray=selectCells(shipid, carrierArray[0]);
+//            console.log(shipid + " 5");
+            carrierArray=shadowArray;
             console.log("carrierArray"+carrierArray)
             break;
         case "battleship":
 //            console.log(shipid + " 4");
-            battleshipArray=selectCells(shipid, battleshipArray[0]);
+            battleshipArray=shadowArray;
             console.log("battleshipArray"+battleshipArray)
             break;
         case "submarine":
 //            console.log(shipid + " 3");
-            submarineArray=selectCells(shipid, submarineArray[0]);
+            submarineArray=shadowArray;
             console.log("submarineArray"+submarineArray)
             break;
         case "destroyer":
-            destroyerArray=selectCells(shipid, destroyerArray[0]);
+            destroyerArray=shadowArray;
 //            console.log(shipid + " 3");
             console.log("destroyerArray"+destroyerArray)
             break;
         case "patrolboat":
-            patrolboatArray=selectCells(shipid, patrolboatArray[0]);
+            patrolboatArray=shadowArray;
             console.log("patrolboatArray"+patrolboatArray)
 //            console.log(shipid + " 2");
         break;
-        }
+            }
+    shadowArray=[];
 }
     else{
-        //undo horizontal boolean in case not in grid or overlap
+        //toggle horizontal boolean back in case not in grid or overlap
         this[shipid+"Horizontal"] = !this[shipid+"Horizontal"];
         }
     }
-
 
 
 function selectCells(shipid, cellid){
@@ -401,12 +468,12 @@ function selectCells(shipid, cellid){
 }
         
 function calculateLocations(shipid, cellid, number){
-    console.log("shipid "+shipid)
-    console.log("Horizontal "+this[shipid+"Horizontal"])
+//    console.log("shipid "+shipid)
+//    console.log("Horizontal "+this[shipid+"Horizontal"])
     
    if (this[shipid+"Horizontal"]==true){ 
     cellarray = [cellid]
-       console.log("cellid "+cellid)
+//       console.log("cellid "+cellid)
     var element = document.getElementById(cellid);
 //       console.log("element"+ element)  
 //    element.classList.add(shipid);
@@ -446,6 +513,28 @@ function calculateLocations(shipid, cellid, number){
     return cellarray;
 }
 
+function placeSalvoes(ev){
+//    console.log("ev.target.id "+ev.target.id);
+document.getElementById(ev.target.id).classList.add('miss');
+    cell=ev.target.id.replace("E", "");  
+    locationArray.push(cell)
+//    console.log(locationArray);
+//    console.log(locationArray.length);
+    if(locationArray.length==5){
+        var object={
+        "locations":locationArray,
+        "salvoTurn":turn
+    }
+    cells.push(object);
+    app.printSalvoes(cells, 'E');
+    cells=[];
+    
+    app.sendSalvoData(3, locationArray) 
+    locationArray=[];
+    
+//    console.log(cells);
+    }
+}
 
 var app = new Vue({
             el: '#vue',
@@ -478,16 +567,27 @@ var app = new Vue({
                         })
                         .then(r => r.json())
                         .then(json => {
-                            app.games = json;
-//                            console.log(app.games);
-                     app.printShips(app.games.ships);
-             app.printSalvos(app.games.salvoes, 'E');       app.printSalvos(app.games.enemy_salvoes, 'U');
+                    app.games = json;
+                        if ("error" in app.games){
+                        window.location.href = "games.html"
+                        }
+                    console.log(app.games);
+                    app.printShips(app.games.ships);
+                    app.printSalvoes(app.games.salvoes, 'E');       app.printSalvoes(app.games.enemy_salvoes, 'U');
                         })
                         .catch(e => console.log(e));
+
                 },
                 printShips(cells) {
-//                    console.log(cells)
+                    console.log(cells)
                     for (var i = 0; i < cells.length; i++) {
+                        name=cells[i].shipType; name=name.split(" ").join("").toLowerCase();
+                        console.log(name)
+                        console.log(window[name+"Array"])
+                        
+                            window[name+"Array"]=cells[i].locations;
+                            console.log(patrolboatArray)
+                        
                         for (var j = 0; j < cells[i].locations.length; j++) {
                             let location = cells[i].locations[j];
                             location = "U" + location
@@ -499,18 +599,23 @@ var app = new Vue({
                         }
                     }
                 },
-                printSalvos(cells, tableId) {
+                printSalvoes(cells, tableId) {
+//                    console.log(cells)
                     if (cells != undefined) {
                         for (var i = 0; i < cells.length; i++) {
                             let turn = cells[i].salvoTurn;
                             for (var j = 0; j < cells[i].locations.length; j++) {
                                 let location = cells[i].locations[j];
                                 let cell = document.getElementById(tableId + location);
-                                if (cell.classList.contains('ship-location')) {
+                                console.log("cell= "+cell)
+
+                                if (cell.classList.contains('ship-location')&&tableId=='U') {
                                     cell.classList.remove('ship-location');
                                     cell.classList.add('hit');
-                                } else {
-                                    cell.classList.add('miss');
+                                } else if (cell.classList.contains('ship-location')&&tableId=='E'){
+                                    cell.classList.add('hitEnemy');
+                                } else if (tableId=='E'){
+                                    cell.classList.add('miss');  
                                 }
                                 cell.innerHTML = turn;
                             }
@@ -556,7 +661,26 @@ var app = new Vue({
                                 'Content-Type': 'application/x-www-form-urlencoded'
                             },
                             body: "type=" + type + "&locations=" + locations
-
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                },
+                sendSalvoData(turn, locations) {
+                    console.log("new fetch")
+                    console.log(urlParams.get('gp'))
+                    fetch("/api/games/players/" + urlParams.get('gp') + "/salvoes", {
+                            credentials: 'include',
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body:  "turn="+turn+"&locations=" + locations
                         })
                         .then(response => response.json())
                         .then(data => {
@@ -569,6 +693,5 @@ var app = new Vue({
                 coordinates(number,letter){
                     console.log(number,letter);
                         }
-                
                     }
                 })

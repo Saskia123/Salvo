@@ -1,12 +1,15 @@
+html, body{
+    height: 100%;    
+}
+
 body {
-/*
     background-image: url("bckgrnd.jpg");
-    height: 100vh;
-    width: 100vh;
+/*    background-image: url("water.gif");*/
+/*        background-image: url("https://media.giphy.com/media/YJY1XgC19hY6Q/giphy.gif");*/
     background-repeat: no-repeat;
     background-size: cover;
     overflow: auto;
-*/
+/*background-color: lightblue !important;*/
 /*    background-position: bottom right;*/
 
     font-family: 'Nothing+You+Could+Do', cursive !important;
@@ -15,15 +18,16 @@ body {
 /*    font-family: 'La+Belle+Aurore', cursive;*/
 /*    font-family: 'Kristi', cursive;*/
 /*    font-family: 'Homemade+Apple', cursive;*/
-    overflow: auto;
 }
+
 
 table{
     border-collapse: collapse;
     text-align: center;
+        border: 5px dotted black
 }
 
-#txt{
+#txt, .modal-body{
     font-family: 'Special Elite', cursive;
 }
 
@@ -44,9 +48,11 @@ td, th {
     z-index: 0;
 }
 
+
 .dragndrop{
     position: absolute;
 }
+
 
 .ships {
 /*    vertical-align: middle;*/
@@ -62,6 +68,10 @@ td, th {
     left: 0;
     border: 0;
 */
+}
+
+.header{
+       font-size: 30px; 
 }
 
 #title {
@@ -168,22 +178,52 @@ td, th {
     background-color: green;
 }
 .hit {
-     background-color: red; 
+/*     background-color: red;*/
+    background-image: url("hit.png");
+    background-position: center; 
+    background-size: cover;
+    height:50px;
+    width:50px;
+    z-index: 100;
 }
+
+.hitEnemy{
+    background-color: red;
+/*
+    background-image: url("Torpedo1.png");
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-size: cover;    
+    -webkit-filter: invert(40%) grayscale(100%) brightness(70%) sepia(100%) hue-rotate(-50deg) saturate(400%) contrast(2);
+    filter: invert(40%) grayscale(100%) brightness(70%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(2);
+*/
+}
+
 .miss {
-      background-color: blue;
+    background-image: url("Torpedo1.png");
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-size: contain;
+    color:white;
+    font-weight: bold;
 }
 
 caption{
     margin: 0 !important;
 }
 
-.tablebackground, .allships{
+.tablebackground, #shipPanel{
     background-color: rgba(255,255,255,0.4);
     border-radius: 30px;
-    display:inline-block;
+/*    display:inline-block;*/
+        float: left;
+
     height: 600px;
     margin: 10px;
+}
+
+.tablebackground{
+    width: 525px;
 }
 
 #shadow{
@@ -198,10 +238,15 @@ caption{
     width:150px;
 }
 
-.allships{
+
+#shipPanel{
     position:relative;
     width: 300px;
     z-index: 0;
+/*
+    visibility:hidden;
+    display:none;
+*/
 }
 
 .grid {
@@ -216,6 +261,13 @@ caption{
 }
 
 #salvogrid{
-    visibility:hidden;
     display:none;
 }
+
+/*
+.salvo{
+    background-image: url("Torpedo1.png");
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-size: contain;
+}*/

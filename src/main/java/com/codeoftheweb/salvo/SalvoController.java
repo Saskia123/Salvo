@@ -91,36 +91,41 @@ public class SalvoController {
 
 
     @RequestMapping("/game_view/{gpID}")
-    public Map<String, Object> mapGameView(@PathVariable Long gpID) {
+    public Map<String, Object> mapGameView(@PathVariable Long gpID, Authentication authentication) {
 
         GamePlayer gamePlayer = gamePlayerRepository.findOne(gpID);
-
         Map<String, Object> mapGamePlayer = new LinkedHashMap<>();
+        if (authentication == null) {
+            mapGamePlayer.put("error", "log in");
+        } else if (gamePlayer.getPlayer().getId() == playerRepository.findByuserName(authentication.getName()).getId()) {
 
-        mapGamePlayer.put("gameID", gamePlayer.getGame().getId());
-        mapGamePlayer.put("created", gamePlayer.getGame().getcreationDate());
-        mapGamePlayer.put("gamePlayers", MakeGamePlayerSetDTO(gamePlayer.getGame().getGamePlayers()));
-        mapGamePlayer.put("ships", gamePlayer.getShips()
-                .stream()
-                .map(ship -> makeShipDTO(ship))
-                .collect(Collectors.toList())
-        );
-        mapGamePlayer.put("salvoes", gamePlayer.getSalvoes()
-                .stream()
-                .map(salvo -> makeSalvoDTO(salvo))
-                .collect(Collectors.toList())
-        );
-        Game game=gamePlayer.getGame();
-        Set<GamePlayer> players=game.getGamePlayers();
-        if (players.size()==2){
-            mapGamePlayer.put("enemy_salvoes", getEnemy(gamePlayer).getSalvoes()
+            mapGamePlayer.put("gameID", gamePlayer.getGame().getId());
+            mapGamePlayer.put("created", gamePlayer.getGame().getcreationDate());
+            mapGamePlayer.put("gamePlayers", MakeGamePlayerSetDTO(gamePlayer.getGame().getGamePlayers()));
+            mapGamePlayer.put("ships", gamePlayer.getShips()
+                    .stream()
+                    .map(ship -> makeShipDTO(ship))
+                    .collect(Collectors.toList())
+            );
+            mapGamePlayer.put("salvoes", gamePlayer.getSalvoes()
                     .stream()
                     .map(salvo -> makeSalvoDTO(salvo))
                     .collect(Collectors.toList())
             );
+            Game game = gamePlayer.getGame();
+            Set<GamePlayer> players = game.getGamePlayers();
+            if (players.size() == 2) {
+                mapGamePlayer.put("enemy_salvoes", getEnemy(gamePlayer).getSalvoes()
+                        .stream()
+                        .map(salvo -> makeSalvoDTO(salvo))
+                        .collect(Collectors.toList())
+                );
+            }
+            mapGamePlayer.put("lastTurn", getmaxturn(gamePlayer.getSalvoes()));
+
+        } else {
+            mapGamePlayer.put("error", "not your game");
         }
-
-
         return mapGamePlayer;
     }
 
@@ -320,42 +325,54 @@ public class SalvoController {
         }
     }
 
-//    @RequestMapping(path = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)
-//    public ResponseEntity<Map<String, Object>> placeShips(@PathVariable Long gamePlayerId,
-//                                                          @RequestBody Set<Ship> ships,
-//                                                          Authentication authentication) {
-//        GamePlayer gamePlayer = gamePlayerRepository.findOne(gamePlayerId);
-//        if (authentication == null) {
-//            return new ResponseEntity<>(makeMap("error", "log in to place ships"), HttpStatus.UNAUTHORIZED);
-//        } else if (gamePlayer == null) {
-//            return new ResponseEntity<>(makeMap("error", "gamePlayer does not exist"), HttpStatus.UNAUTHORIZED);
-//        } else if (gamePlayer.getPlayer() != currentAuthenticatedUser(authentication)) {
-//            return new ResponseEntity<>(makeMap("error", "Not your game"), HttpStatus.UNAUTHORIZED);
-//        }  else if (gamePlayer.getShips().size() > 5) {
-//            return new ResponseEntity<>(makeMap("error", "Not allowed to place ships ")
-//                    , HttpStatus.FORBIDDEN);
-//        } else {
-//            ArrayList<Map<String,Object>> shipList =new ArrayList<>();
-//            for (Ship ship : ships) {
-//                ship.setGamePlayer(gamePlayer);
-//                shipRepository.save(ship);
-//                shipList.add(makeShipDTO(ship));
-//            }
-//            return new ResponseEntity<>(makeMap("succes", shipList)
-//                    , HttpStatus.CREATED);
-//        }
-//    }
+
+
+    @RequestMapping(path = "/games/players/{gamePlayerId}/salvoes")
+    public ResponseEntity<Map<String, Object>> placeSalvoes(@PathVariable ("gamePlayerId") Long gamePlayerId,
+                                                          @RequestParam Integer turn,
+                                                          @RequestParam String[] locations,
+                                                          Authentication authentication) {
+        System.out.println(turn);
+
+        GamePlayer gamePlayer = gamePlayerRepository.findOne(gamePlayerId);
+        Set<Salvo> salvoes = gamePlayer.getSalvoes();
+        Integer maxTurn=getmaxturn(salvoes);
+        if (authentication == null) {
+            return new ResponseEntity<>(makeMap("error", "log in to place salvoes"), HttpStatus.UNAUTHORIZED);
+        } else if (gamePlayer == null) {
+            return new ResponseEntity<>(makeMap("error", "gamePlayer does not exist"), HttpStatus.UNAUTHORIZED);
+        } else if (gamePlayer.getPlayer() != currentAuthenticatedUser(authentication)) {
+            return new ResponseEntity<>(makeMap("error", "Not your game"), HttpStatus.UNAUTHORIZED);
+        }  else if (maxTurn>=turn ) {
+            return new ResponseEntity<>(makeMap("error", "Turn has already passed")
+                    , HttpStatus.FORBIDDEN);
+        } else {
+            ArrayList<String> salvoList = new ArrayList<>();
+
+            for (int i = 0; i < locations.length; i++) {
+                salvoList.add(locations[i]);
+            }
+
+            salvoRepository.save(new Salvo(turn, gamePlayerRepository.findOne(gamePlayerId), salvoList));
+            return new ResponseEntity<>(makeMap("status", "Salvoes placed")
+                    , HttpStatus.CREATED);
+        }
+    }
+
+    private Integer getmaxturn(Set<Salvo> salvoes) {
+        if (salvoes==null){
+            return 0;
+    }
+    else{
+        Integer max=0;
+        for(Salvo salvo:salvoes){
+            if(salvo.getTurn()>max){
+                max=salvo.getTurn();
+            }
+        }
+        return max;
+        }
+    }
 }
 
 
-//    Implement a back-end controller method that can receive a list of ship objects, with locations, save them in your ship repository, and return a "created" response if there are no problems.
-//
-//        The URL should be /games/players/{gamePlayerId}/ships.
-//        The body of the request should be parsed into a list of ships
-//        An Unauthorized response should be sent if
-//        there is no current user logged in, or
-//        there is no game player with the given ID, or
-//        the current user is not the game player the ID references
-//        A Forbidden response should be sent if the user already has ships placed.
-//        Otherwise, the ships should be added to the game player and saved, and a Created response should be sent.
-//        There's no need for new content in the response, because the page needs to request an updated game view, to see possible actions by the opponent.
