@@ -352,9 +352,9 @@ public class SalvoController {
             for (int i = 0; i < locations.length; i++) {
                 salvoList.add(locations[i]);
             }
-
-            salvoRepository.save(new Salvo(turn, gamePlayerRepository.findOne(gamePlayerId), salvoList));
-            return new ResponseEntity<>(makeMap("status", "Salvoes placed")
+            Salvo newSalvo=new Salvo(turn, gamePlayerRepository.findOne(gamePlayerId), salvoList);
+            salvoRepository.save(newSalvo);
+            return new ResponseEntity<>( makeSalvoDTO(newSalvo)
                     , HttpStatus.CREATED);
         }
     }

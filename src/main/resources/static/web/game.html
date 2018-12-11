@@ -30,7 +30,6 @@
 -->
   </ul>
    <ul class="navbar-nav ml-auto">
-<span class="navbar-text" id="txt"></span>
        <li class="nav-item mr-auto">
     <a class="nav-link" v-on:click="back()"><i class="fas fa-chevron-left fa-1x"></i></a>      	
     </li>
@@ -39,6 +38,10 @@
     </li>
     </ul>
 </nav>
+
+<div class="d-flex justify-content-end">
+<span class="navbar-text" id="txt"></span>
+        </div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -106,6 +109,7 @@
         <table class="grid"   >
             <div v-for="player in games.gamePlayers" v-if="games.gamePlayers[1] != null&&!playerview(player.id)" class="games text-center h3">{{player.player.email}} (Enemy)
             </div>
+            <div v-if="games.gamePlayers[1] == null&&!playerview(player.id)" class="games text-center h3">(Enemy)</div>
             <tbody>
                 <tr>
                     <th></th>

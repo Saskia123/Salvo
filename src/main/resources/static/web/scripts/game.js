@@ -1,15 +1,18 @@
-// shadow -> change pointer position on drag
+// change pointer position on drag
 // warning when there is overlap on drag/drop and when rotating
-// layout stuff -> center dragndrop, top navigation
-// cookie or whatever not to log out
 // sending amount of salvoes equal to ships left
 // when you click on the salvo shot it will undo it 
 // check after delay
-// solution for showing oponents sunk ships (show full ship or overview with colors)
 // show hits of oponents ship
 // if error message ==login, then redirect to homepage
-// sign up stuff
 // it should not be possible to move ships and salvoes after sending ship and salvo data
+
+//bug: when ship is placed in grid and clicked on in order to rotate, the ships that are not yet in the grid are not able to rotate.
+//after a ship is placed vertically in the grid and a rotation was prohibited it is not possible to rotate a ship in the panel.
+//when this happens it is possible to rotate a ship inside the grid so the new position will be outside the grids boundaries
+//should not be possible to sign up or sign in with empty fields
+
+
   const urlParams = new URL(window.location.href).searchParams;
 
     var shipid;
@@ -28,6 +31,7 @@
     var patrolboatHorizontal=true;
     var shipsPlaced = 0;
     var turn=0;
+//console.log(app.lastTurn);
     var cells=[];
     var locationArray=[];
 
@@ -526,10 +530,14 @@ document.getElementById(ev.target.id).classList.add('miss');
         "salvoTurn":turn
     }
     cells.push(object);
-    app.printSalvoes(cells, 'E');
+   // app.printSalvoes(cells, 'E');
     cells=[];
     
-    app.sendSalvoData(3, locationArray) 
+    console.log(object.lastTurn)    
+//    turn =object.salvoTurn+1
+//    console.log("turn "+turn);
+//    location.reload(); -> if unsuccessful   
+    app.sendSalvoData(turn, locationArray) 
     locationArray=[];
     
 //    console.log(cells);
@@ -555,6 +563,7 @@ var app = new Vue({
                 gameID: [],
                 gamePlayers: [],
                 player: {},
+                lastTurn: 0
             },
             created() {
                 this.getData();
@@ -567,16 +576,17 @@ var app = new Vue({
                         })
                         .then(r => r.json())
                         .then(json => {
-                    app.games = json;
+                        app.games = json;
                         if ("error" in app.games){
                         window.location.href = "games.html"
                         }
-                    console.log(app.games);
-                    app.printShips(app.games.ships);
-                    app.printSalvoes(app.games.salvoes, 'E');       app.printSalvoes(app.games.enemy_salvoes, 'U');
+                        console.log(app.games);
+                        app.lastTurn=app.games.lastTurn;
+                        console.log(app.lastTurn)
+                        app.printShips(app.games.ships);
+                        app.printSalvoes(app.games.salvoes, 'E');   app.printSalvoes(app.games.enemy_salvoes, 'U');
                         })
                         .catch(e => console.log(e));
-
                 },
                 printShips(cells) {
                     console.log(cells)
@@ -600,7 +610,7 @@ var app = new Vue({
                     }
                 },
                 printSalvoes(cells, tableId) {
-//                    console.log(cells)
+//                   console.log(cells)
                     if (cells != undefined) {
                         for (var i = 0; i < cells.length; i++) {
                             let turn = cells[i].salvoTurn;
@@ -617,7 +627,7 @@ var app = new Vue({
                                 } else if (tableId=='E'){
                                     cell.classList.add('miss');  
                                 }
-                                cell.innerHTML = turn;
+                                cell.innerHTML = cells[i].salvoTurn;
                             }
                         }
                     }
@@ -672,6 +682,7 @@ var app = new Vue({
                 },
                 sendSalvoData(turn, locations) {
                     console.log("new fetch")
+                    salvoCells=[];
                     console.log(urlParams.get('gp'))
                     fetch("/api/games/players/" + urlParams.get('gp') + "/salvoes", {
                             credentials: 'include',
@@ -680,11 +691,20 @@ var app = new Vue({
                                 'Accept': 'application/json',
                                 'Content-Type': 'application/x-www-form-urlencoded'
                             },
-                            body:  "turn="+turn+"&locations=" + locations
+                            body:  "turn="+(app.lastTurn+1)+"&locations=" + 
+                        locations
                         })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data);
+                    .then(function(response){
+                        if(!response.ok){
+                            console.log('Looks like there was a problem. Status Code: ' + response.status);
+                        return;
+                        }
+                        response.json().then(data => {
+                        app.lastTurn=app.lastTurn+1
+                        console.log(data);
+                        salvoCells.push(data)
+                    app.printSalvoes(salvoCells,'E');
+                        })
                         })
                         .catch(error => {
                             console.log(error)

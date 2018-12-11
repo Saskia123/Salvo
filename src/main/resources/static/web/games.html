@@ -25,11 +25,18 @@
             <li class="nav-item mr-auto" id="login-form" v-if="!checkLogin">
                 <span class="navbar-text">Name: <input type="text" name="userName"v-model="userName"></span>
                 <span class="navbar-text">Password: <input type="text" name="password" v-model="password"></span>
-                <button  type="button" class="btn btn-primary" class="btn btn-lg btn-primary" v-on:click="login()" v-if="!checkLogin"> Log in</button>
-                <button class="btn btn-primary" v-on:click="createNewPlayer()" v-if="!checkLogin">Sign up</button>
-            </li>
+<!--                <button  type="button" class="btn btn-primary" class="btn btn-lg btn-primary" v-on:click="login()" v-if="!checkLogin"> Log in</button>-->
+       </li>
+                       <li class="nav-item mr-auto" id="login-form" v-if="!checkLogin">
+            <a class="nav-link" v-on:click="login()" v-if="!checkLogin"><i class="fas fa-sign-in-alt fa-1x"></i></a>      
+       </li>
+            <a class="nav-link" v-on:click="createNewPlayer()" v-if="!checkLogin">
+            <i class="fas fa-user-plus"></i>                  
+<!--            <button class="btn btn-primary" v-on:click="createNewPlayer()" v-if="!checkLogin">Sign up</button>-->
+            </a>
             <li class="nav-item mr-auto" id="logout-form" onsubmit="return false">
-                <button  type="button" class="btn btn-primary" v-on:click="logout()" v-if="checkLogin"><span class="glyphicon glyphicon-log-out"></span> Log out</button>
+            <a class="nav-link" v-on:click="logout()" v-if="checkLogin"><i class="fas fa-sign-out-alt fa-1x"></i></a>      
+<!--            <button  type="button" class="btn btn-primary" v-on:click="logout()" v-if="checkLogin">Log out</button>-->
             </li>
     </ul>
 </nav>
@@ -38,38 +45,36 @@
     <div class="" v-if="loading">
         <div v-if="checkLogin">Welcome {{player}}!</div>
 
-      <button class="btn btn-primary" v-on:click="createGame()">Create new game</button>
+      <button class="btn btn-primary" v-on:click="createGame()" v-if="player">Create new game</button>
 
       <th>Active games</th>  
    
-        <table >
-            <tr class="table games" v-for="(game, index) in games">
-            <td>{{game.id}} {{game.name}}</td>
-            <td>Creation date: {{game.creationdate}}</td> 
-            <td v-if="game.gameplayer[0]">Player 1: {{game.gameplayer[0].player.username}}({{game.gameplayer[0].id}})</td> 
-            <td>Player 2:<p v-if="game.gameplayer.length == 2"> {{game.gameplayer[1].player.username}}, {{game.gameplayer[1].id}}</p></td> 
-            <td>                    <button class="btn btn-primary" v-on:click="return2Game(game.gameplayer[1].id)" v-if="game.gameplayer[1] && playerid == game.gameplayer[1].player.id">Return to game</button>
-                    <button class="btn btn-primary" v-on:click="return2Game(game.gameplayer[0].id)" v-if="playerid == game.gameplayer[0].player.id">Return to game</button>
-            <button class="btn btn-primary" v-on:click="joinGame(game.id)" v-if="!returnGame(playerid,index) && game.gameplayer.length !== 2">Join game</button></td> 
-    
+        <table class="">
+           <tr>
+               <th>Game</th>
+               <th>Creation date</th>
+               <th>Player 1</th>
+               <th>Player 2</th>
+               <th v-if="player"></th>
+           </tr>
+            <tr class="" v-for="(game, index) in games">
+<!--            <td>{{game.id}} {{game.name}}</td>-->
+            <td>{{game.id}}</td>
+            <td>{{game.creationdate}}</td> 
+            <td v-if="game.gameplayer[0]">{{game.gameplayer[0].player.username}}({{game.gameplayer[0].id}})</td> 
+            <td v-if="game.gameplayer.length == 2"> {{game.gameplayer[1].player.username}}, {{game.gameplayer[1].id}}</td> 
+            <td v-else></td> 
+            <td v-if="player">                    
+            <button class="btn btn-primary tablebuttons" v-on:click="return2Game(game.gameplayer[1].id)" v-if="game.gameplayer[1] && playerid == game.gameplayer[1].player.id">Return to game</button>
+            <button class="btn btn-primary tablebuttons" v-on:click="return2Game(game.gameplayer[0].id)" v-if="playerid == game.gameplayer[0].player.id">Return to game</button>
+            <button class="btn btn-primary tablebuttons" v-on:click="joinGame(game.id)" v-if="!returnGame(playerid,index) && game.gameplayer.length !== 2&&player">Join game</button>
+<!--            player: "noone"-->
+            </td>
             </tr>
         </table>
-<!--      
-            <tr class="table games" v-for="(game, index) in games">
-                    <p>{{game.id}} {{game.name}}</p> 
-                    <p>Creation date: {{game.creationdate}}</p>
-                    <p v-if="game.gameplayer[0]">
-                    Player 1: {{game.gameplayer[0].player.username}}({{game.gameplayer[0].id}}) </p>
-                    <p>Player 2:</p><p v-if="game.gameplayer.length == 2"> {{game.gameplayer[1].player.username}}, {{game.gameplayer[1].id}}
-                    </p>
-                    <button class="btn btn-primary" v-on:click="return2Game(game.gameplayer[1].id)" v-if="game.gameplayer[1] && playerid == game.gameplayer[1].player.id">Return to game</button>
-                    <button class="btn btn-primary" v-on:click="return2Game(game.gameplayer[0].id)" v-if="playerid == game.gameplayer[0].player.id">Return to game</button>
-                    <button class="btn btn-primary" v-on:click="joinGame(game.id)" v-if="!returnGame(playerid,index) && game.gameplayer.length !== 2">Join game</button>
-                </tr>
--->
     </div>
 
-                <table id="leaderboard">
+                <table id="leaderboard" class="">
                     <tbody>
                         <tr>
                             <th v-for="x in thx">{{x}}</th>
