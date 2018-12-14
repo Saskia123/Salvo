@@ -47,6 +47,7 @@ var app = new Vue({
                         app.loading = true
                     }
                     console.log(json)
+                    console.table([["j.bauer@ctu.gov","24"], ["c.obrian@ctu.gov", "42"], ["kim_bauer@gmail.com", "kb"], ["t.almeida@ctu.gov", "mole"]]);
                 })
                 .catch(e => console.log(e));
         },

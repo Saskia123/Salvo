@@ -11,6 +11,8 @@
 //after a ship is placed vertically in the grid and a rotation was prohibited it is not possible to rotate a ship in the panel.
 //when this happens it is possible to rotate a ship inside the grid so the new position will be outside the grids boundaries
 //should not be possible to sign up or sign in with empty fields
+//should not be possible to remove salvoes from previous turns
+// improve testdata for ships and ship length
 
 
   const urlParams = new URL(window.location.href).searchParams;
@@ -126,7 +128,7 @@
     document.getElementById(shipid).style.margin = "0px";
     shadowArray=[];
     shipsPlaced=shipsPlaced+1;
-//    console.log ("shipsPlaced "+shipsPlaced)
+    console.log ("shipsPlaced "+shipsPlaced)
         
     if(carrierArray.length==5&&battleshipArray.length==4&&submarineArray.length==3&&destroyerArray.length==3&&patrolboatArray.length==2){
     document.getElementById("shipPanel").style.display = "none";
@@ -381,6 +383,8 @@ function rotateBy90Deg(ele){
     
     if (inGrid()&&!shipOverlap(shipid)){   
     
+        
+//make rotated div by assigning interchanged width and height      
     var oldheight = $('#'+ele.id).height();
     var oldwidth = $('#'+ele.id).width();
         
@@ -391,8 +395,8 @@ function rotateBy90Deg(ele){
     ele.style.width = oldheight+"px";
     
         
-//            console.log(this[shipid+"Horizontal"])
-        console.log(this[shipid+"Horizontal"]==true )
+//  console.log(this[shipid+"Horizontal"])
+//  console.log(this[shipid+"Horizontal"]==true )
         
     //apply the right image in accordance to horizontal boolean    
         if (this[shipid+"Horizontal"]==true){
@@ -518,9 +522,19 @@ function calculateLocations(shipid, cellid, number){
 }
 
 function placeSalvoes(ev){
+element = document.getElementById(ev.target.id);  
+//console.log("element "+ element)    
 //    console.log("ev.target.id "+ev.target.id);
-document.getElementById(ev.target.id).classList.add('miss');
-    cell=ev.target.id.replace("E", "");  
+cell=ev.target.id.replace("E", "");  
+//console.log("cell "+cell)    
+    
+if (element.classList.contains('miss')){
+element.classList.remove("miss");
+//locationArray.pop(cell)
+locationArray.splice(locationArray.indexOf(cell), 1 );    
+}
+else{
+document.getElementById(ev.target.id).classList.add('miss');         
     locationArray.push(cell)
 //    console.log(locationArray);
 //    console.log(locationArray.length);
@@ -531,17 +545,17 @@ document.getElementById(ev.target.id).classList.add('miss');
     }
     cells.push(object);
    // app.printSalvoes(cells, 'E');
-    cells=[];
-    
+    cells=[];    
     console.log(object.lastTurn)    
 //    turn =object.salvoTurn+1
 //    console.log("turn "+turn);
 //    location.reload(); -> if unsuccessful   
     app.sendSalvoData(turn, locationArray) 
     locationArray=[];
-    
 //    console.log(cells);
+        }
     }
+//    console.log("salvoes locationArray "+locationArray);
 }
 
 var app = new Vue({
@@ -591,13 +605,51 @@ var app = new Vue({
                 printShips(cells) {
                     console.log(cells)
                     for (var i = 0; i < cells.length; i++) {
-                        name=cells[i].shipType; name=name.split(" ").join("").toLowerCase();
-                        console.log(name)
-                        console.log(window[name+"Array"])
+                        name=cells[i].shipType; 
+                        name=name.split(" ").join("").toLowerCase();
+//                        console.log(name)
+//                        console.log((window[name+"Array"]))
+                        window[name+"Array"]=cells[i].locations;
+//                        console.log("carrierArray "+carrierArray)
+//                        console.log("battleshipArray "+battleshipArray)
+//                        console.log("submarineArray "+submarineArray)
+//                        console.log("destroyerArray "+destroyerArray)
+//                        console.log("patrolboatArray "+patrolboatArray)            
+//                      console.log (cells[i].locations[0].substr(0,1))
+//                        console.log(cells[i].locations[1].substr(0,1))
+                    var ele = document.getElementById(name);
+                    console.log("cells[i]locations[0] " + "U" + cells[i].locations[0]);
+                    var firstcell = document.getElementById("U" + cells[i].locations[0]);
+                    firstcell.append(document.getElementById(name));
+                    document.getElementById(name).style.margin = "0px";
+                    shipsPlaced = shipsPlaced + 1;
+                    console.log("shipsPlaced " + shipsPlaced)
+
+                    if (carrierArray.length == 5 && battleshipArray.length == 4 && submarineArray.length == 3 && destroyerArray.length == 3 && patrolboatArray.length == 2) {
+                        document.getElementById("shipPanel").style.display = "none";
+                        //    document.getElementById("shipPanel").style.visibility = "hidden";
+                        document.getElementById("salvogrid").style.display = "block";
+                        //    document.getElementById("salvogrid").style.visibility = "visible";
+                    }
                         
-                            window[name+"Array"]=cells[i].locations;
-                            console.log(patrolboatArray)
+                    if (cells[i].locations[0].substr(0,1)!==cells[i].locations[1].substr(0,1)){
+                    window[name+"Horizontal"]=false;
+//              make rotated div by assigning interchanged width and height      
+                    var oldheight = $('#'+name).height();
+                    var oldwidth = $('#'+name).width();
+//                  console.log("oldheight" + oldheight);
+//                  console.log("oldwidth" + oldwidth);
+                    ele.style.height = oldwidth+"px";
+                    ele.style.width = oldheight+"px";
+                    path="url("+name+"_v.png)"
+                    ele.style.backgroundImage = "url(styles/"+name+"_v.png)";     
                         
+                        }
+//                    console.log("carrierHorizontal "+carrierHorizontal)
+//                    console.log("battleshipHorizontal "+ battleshipHorizontal)
+//                    console.log("submarineHorizontal "+ submarineHorizontal)
+//                    console.log("destroyerHorizontal "+ destroyerHorizontal)
+//                    console.log("patrolboatHorizontal "+ patrolboatHorizontal);
                         for (var j = 0; j < cells[i].locations.length; j++) {
                             let location = cells[i].locations[j];
                             location = "U" + location
@@ -607,6 +659,7 @@ var app = new Vue({
 //                         console.log(cell.classList)
                             cell.classList.add('ship-location');
                         }
+                        
                     }
                 },
                 printSalvoes(cells, tableId) {
@@ -618,16 +671,21 @@ var app = new Vue({
                                 let location = cells[i].locations[j];
                                 let cell = document.getElementById(tableId + location);
                                 console.log("cell= "+cell)
-
+                                let img = document.createElement("img");
                                 if (cell.classList.contains('ship-location')&&tableId=='U') {
-                                    cell.classList.remove('ship-location');
-                                    cell.classList.add('hit');
+                                    //cell.classList.remove('ship-location');
+                                    img.setAttribute("src","/web/styles/hit.png")
+                                    img.classList.add("hit")
                                 } else if (cell.classList.contains('ship-location')&&tableId=='E'){
-                                    cell.classList.add('hitEnemy');
+                                    img.setAttribute("src","/web/styles/hit.png")
                                 } else if (tableId=='E'){
                                     cell.classList.add('miss');  
+//                                    img.setAttribute("src","../styles/hit.png")
                                 }
-                                cell.innerHTML = cells[i].salvoTurn;
+                                let p =  document.createElement("p")
+                                p.innerHTML = cells[i].salvoTurn
+                                cell.append(p);
+                                cell.append(img);
                             }
                         }
                     }

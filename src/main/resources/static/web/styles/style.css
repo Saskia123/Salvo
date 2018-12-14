@@ -191,9 +191,11 @@ td, th {
     margin-top: 475px;
 }
 
+/*
 .ship-location{
     background-color: green;
 }
+*/
 .hit {
 /*     background-color: red;*/
     background-image: url("hit.png");
@@ -270,7 +272,6 @@ table {
     margin: 15px;
     padding: 15px;
     border:none;
-    border-spacing: 10px;
 /*	outline:1px solid #000;*/
 }
 

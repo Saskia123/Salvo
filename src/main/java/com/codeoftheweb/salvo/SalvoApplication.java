@@ -139,17 +139,25 @@ public class SalvoApplication {
 				ArrayList<String> Locations30 = new ArrayList<String>(Arrays.asList("A2", "A3", "A4"));
 				ArrayList<String> Locations31 = new ArrayList<String>(Arrays.asList("G6", "H6"));
 
+				//game 1 - bauer
 				Ship ship1 = new Ship("Destroyer", gamePlayer1, Locations1);
 				Ship ship2 = new Ship("Submarine", gamePlayer1, Locations2);
 				Ship ship3 = new Ship("Patrol Boat", gamePlayer1, Locations3);
+				//game 1 - obrian
 				Ship ship4 = new Ship("Destroyer", gamePlayer2, Locations4);
 				Ship ship5 = new Ship("Patrol Boat", gamePlayer2, Locations5);
-
-				Ship ship6 = new Ship("Battleship", gamePlayer2, Locations2);
-				Ship ship7 = new Ship("Destroyer", gamePlayer3, Locations3);
-				Ship ship8 = new Ship("Submarine", gamePlayer4, Locations1);
-				Ship ship9 = new Ship("Patrol Boat", gamePlayer5, Locations2);
-				Ship ship10 = new Ship("Submarine", gamePlayer5, Locations1);
+				//game 2 - bauer
+				Ship ship6 = new Ship("Destroyer", gamePlayer3, Locations6);
+				Ship ship7 = new Ship("Patrol Boat", gamePlayer3, Locations7);
+				//game 2 - obrian
+				Ship ship8 = new Ship("Submarine", gamePlayer4, Locations8);
+				Ship ship9 = new Ship("Patrol Boat", gamePlayer4, Locations9);
+				//game 3 - obrian
+				Ship ship10 = new Ship("Destroyer", gamePlayer5, Locations10);
+				Ship ship11 = new Ship("Patrol Boat", gamePlayer5, Locations11);
+				//game 3 - almeida
+				Ship ship12 = new Ship("Submarine", gamePlayer6, Locations12);
+				Ship ship13 = new Ship("Patrol Boat", gamePlayer6, Locations13);
 
 				shipRepository.save(ship1);
 				shipRepository.save(ship2);
@@ -160,7 +168,10 @@ public class SalvoApplication {
 				shipRepository.save(ship7);
 				shipRepository.save(ship8);
 				shipRepository.save(ship9);
-				shipRepository.save(ship10);
+                shipRepository.save(ship10);
+                shipRepository.save(ship11);
+                shipRepository.save(ship12);
+                shipRepository.save(ship13);
 
 //Salvolocations
 				ArrayList<String> Locations32 = new ArrayList<String>(Arrays.asList("B5", "C5", "F1"));
@@ -236,11 +247,10 @@ public class SalvoApplication {
                 Score score2=new Score(game2, player2,1.0);
                 Score score3=new Score(game3, player1,1.0);
                 Score score4=new Score(game4, player2,1.0);
-			scoreRepository.save(score1);
-			scoreRepository.save(score2);
-               scoreRepository.save(score3);
-              scoreRepository.save(score4);
-
+			    scoreRepository.save(score1);
+			    scoreRepository.save(score2);
+                scoreRepository.save(score3);
+                scoreRepository.save(score4);
 			};
 		}
 

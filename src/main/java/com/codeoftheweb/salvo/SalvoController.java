@@ -89,6 +89,54 @@ public class SalvoController {
         return dto;
     }
 
+    @RequestMapping("/game_view/{gpID}/HnS")
+    public Map<String, Object> mapHnS(@PathVariable Long gpID, Authentication authentication) {
+
+        GamePlayer gamePlayer = gamePlayerRepository.findOne(gpID);
+
+        Map<String, Object> mapGamePlayer = new LinkedHashMap<>();
+        if (authentication == null) {
+            mapGamePlayer.put("error", "log in");
+        } else if (gamePlayer.getPlayer().getId() == playerRepository.findByuserName(authentication.getName()).getId()) {
+
+            mapGamePlayer.put("gameID", gamePlayer.getGame().getId());
+            mapGamePlayer.put("created", gamePlayer.getGame().getcreationDate());
+            mapGamePlayer.put("gamePlayers", MakeGamePlayerSetDTO(gamePlayer.getGame().getGamePlayers()));
+            mapGamePlayer.put("ships", gamePlayer.getShips()
+                    .stream()
+                    .map(ship -> makeShipDTO(ship))
+                    .collect(Collectors.toList())
+            );
+            mapGamePlayer.put("salvoes", gamePlayer.getSalvoes()
+                    .stream()
+                    .map(salvo -> makeSalvoDTO(salvo))
+                    .collect(Collectors.toList())
+            );
+            Game game = gamePlayer.getGame();
+            Set<GamePlayer> players = game.getGamePlayers();
+            if (players.size() == 2) {
+                mapGamePlayer.put("enemy_salvoes", getEnemy(gamePlayer).getSalvoes()
+                        .stream()
+                        .map(salvo -> makeSalvoDTO(salvo))
+                        .collect(Collectors.toList())
+                );
+
+                mapGamePlayer.put("hits_on_enemy", getHits(gamePlayer));
+                mapGamePlayer.put("hits_on_user", getHits(getEnemy(gamePlayer)));
+                mapGamePlayer.put("user_sunk_ships", getSunkShips(gamePlayer));
+                mapGamePlayer.put("enemy_sunk_ships", getSunkShips(getEnemy(gamePlayer)));
+            }
+
+
+
+            mapGamePlayer.put("lastTurn", getmaxturn(gamePlayer.getSalvoes()));
+
+        } else {
+            mapGamePlayer.put("error", "not your game");
+        }
+        return mapGamePlayer;
+    }
+
 
     @RequestMapping("/game_view/{gpID}")
     public Map<String, Object> mapGameView(@PathVariable Long gpID, Authentication authentication) {
@@ -128,6 +176,7 @@ public class SalvoController {
         }
         return mapGamePlayer;
     }
+
 
     private GamePlayer getEnemy(GamePlayer gamePlayer) {
         return gamePlayer
@@ -373,6 +422,75 @@ public class SalvoController {
         return max;
         }
     }
+
+
+    private List<String> getShipsLocation (GamePlayer gamePlayer) {
+        List<String> list = new ArrayList<>();
+
+        for (Ship ship : gamePlayer.getShips()) {
+            for (String location : ship.getLocations()) {
+                list.add(location);
+            }
+        }
+        return list;
+    }
+
+    private List<String> getSalvosLocation (GamePlayer gamePlayer) {
+
+
+        List<String> list = new ArrayList<>();
+
+        for (Salvo salvo : gamePlayer.getSalvoes()) {
+            for (String location : salvo.getLocations()) {
+                list.add(location);
+            }
+        }
+        return list;
+
+
+    }
+
+    private List<String> getHits (GamePlayer gamePlayer) {
+        List<String> list = new ArrayList<>();
+
+        for (String salvoCell : getSalvosLocation(gamePlayer)) {
+            for (String shipCell : getShipsLocation(getEnemy(gamePlayer))) {
+                if(shipCell.equals(salvoCell)) {
+                    list.add(salvoCell);
+                }
+            }
+        }
+        return list;
+    }
+
+    private List<Object> getSunkShips (GamePlayer gamePlayer) {
+        List<Object> list = new ArrayList<>();
+
+        for (Ship ship : gamePlayer.getShips()) {
+
+            List<String> hitsOnShip = new ArrayList<>();
+            for (String hit : getHits(getEnemy(gamePlayer))) {
+                if (ship.getLocations().contains(hit)){
+                    hitsOnShip.add(hit);
+                }
+            }
+
+            if (hitsOnShip.size() == ship.getLocations().size()) {
+                list.add(makeShipDTO(ship));
+            }
+        }
+
+        return list;
+    }
+
+
+
+
+
+
+
 }
+
+
 
 

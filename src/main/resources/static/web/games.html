@@ -62,7 +62,7 @@
             <td>{{game.id}}</td>
             <td>{{game.creationdate}}</td> 
             <td v-if="game.gameplayer[0]">{{game.gameplayer[0].player.username}}({{game.gameplayer[0].id}})</td> 
-            <td v-if="game.gameplayer.length == 2"> {{game.gameplayer[1].player.username}}, {{game.gameplayer[1].id}}</td> 
+            <td v-if="game.gameplayer.length == 2"> {{game.gameplayer[1].player.username}} ({{game.gameplayer[1].id}})</td> 
             <td v-else></td> 
             <td v-if="player">                    
             <button class="btn btn-primary tablebuttons" v-on:click="return2Game(game.gameplayer[1].id)" v-if="game.gameplayer[1] && playerid == game.gameplayer[1].player.id">Return to game</button>
